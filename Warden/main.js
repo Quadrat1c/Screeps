@@ -11,3 +11,22 @@
  * Real-Time AI/Behaviour for Screeps
  *
  **/
+
+creeps.forEach(function(creep)
+{
+  // default
+  var input = [];
+  for (var i in creeps)
+  {
+    var output = creep.network.activate(input);
+    creep.mainLoop(output);
+    
+    // learn
+    var learningRate = .8;
+    var target = [
+      targetA(creep),
+      targetB(creep),
+      targetWeight(creep)];
+    creep.network.propagate(learningRate, target);
+  }
+});
