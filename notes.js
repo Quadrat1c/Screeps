@@ -22,3 +22,8 @@ mod.extend = function() {
 		console.log(e.stack || e);
 	}
 };
+
+/** Implement a Task **/
+task.name.js (task code)
+task.js	     (add task file)
+main.js      (add task file)
