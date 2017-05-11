@@ -7,7 +7,7 @@ mod.minControllerLevel = 3;
 mod.register = () => {};
 // for each flag
 mod.handleFlagFound = flag => {
-    // if it is a yellow/yellow flag
+    // if it is a yellow/purple flag
     if (flag.compareTo(FLAG_COLOR.attackSquad) && Task.nextCreepCheck(flag, mod.name)) {
         Util.set(flag.memory, 'task', mod.name);
         // check if a new creep has to be spawned
