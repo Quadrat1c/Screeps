@@ -27,3 +27,22 @@ mod.extend = function() {
 task.name.js (task code)
 task.js	     (add task file)
 main.js      (add task file)
+
+
+============================\Attack squads/===========================
+
+Assemble at auto-generated waypoint in room before attacking or in own room 
+make sure not in the way of anything
+
+Attack matrix for open spaces: (can be rotated)
+[X][X][X]   X = Attackers/bruisers, Have A or W parts, ratio is 40A/W/10M - fully boosted
+[J][H][J]   H = healers 10M/40H (boosted move + heal) - J = optional healers if out-gunned by towers
+[R][R][R]   R = Ranged attackers, also have 2 to 6 heal parts depending on needs.
+
+
+Attack matrix for 1-square tight spaces: (can be rotated).
+[X][H][X] X = Attackers/bruisers, Have A or W parts
+
+Wall attack squads are extendable with extra [H] on the sides
+
+============================/Attack squads\==================thanks dissi
