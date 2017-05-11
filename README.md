@@ -1,4 +1,5 @@
 # Screeps
 Screeps Game, Code and Other things
 
-// TODO: Add healer follow melee in attack squad & add third unit ranged attacker
+// TODO: Make healer goto melee's previous position
+// TODO: Attack Matrix, Bruisers-Healers-Ranged
