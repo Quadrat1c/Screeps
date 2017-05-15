@@ -1,3 +1,7 @@
+Screeps Official Server Endpoints:
+https://screeps.com/api/experimental/nukes
+https://screeps.com/api/experimental/pvp?interval=100
+
 // Power Bank: (Parts based off watching Dissi)
 // ATK 50 (25/25) Move/Atk
 // HEAL 32 (16/16) Move/Heal
