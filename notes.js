@@ -50,3 +50,12 @@ Attack matrix for 1-square tight spaces: (can be rotated).
 Wall attack squads are extendable with extra [H] on the sides
 
 ============================/Attack squads\==================thanks dissi
+
+
+kasami
+If the kbot is not able to defend the remote room, it will leave it for 5000-10000 ticks. The defenders are ranger+supporterteam, plus one warrior. If you beat them, it will abandon the outpost. (edited)
+Bonus if you make it abandon all rooms next to the owned room, it is a high chance it will abandon the base, leaving everything behind.
+
+kasami
+Advanced technique for breaking a complete kbot-empire; take out a room (RCL6+), but leave the terminal. Either take resources back to your own base, or dump it on the ground.
+The distribution-logic for kbot does not consider if a room is completely take out, and will continue sending energy from all other rooms to that terminal if it is low on energy
