@@ -1,43 +1,48 @@
 'use strict';
 
-Room.prototype.tryConstruct = function()
-{
-    if (global.config.visuals.showBuildPlan)
-    {
+Room.prototype.tryConstruct = function() {
+    if (global.config.visuals.showBuildPlan) {
         this.showBuildPlan();
         this.showExtensionPlan();
         //this.buildExtractor();
     }
 
-    if(!this.memory.constructTick) { this.memory.constructTick = 0; }
-    if(!this.memory.extensionTick) { this.memory.extensionTick = 0; }
-    if(!this.memory.wallTick) { this.memory.wallTick = 0; }
+    if (!this.memory.constructTick) {
+        this.memory.constructTick = 0;
+    }
+    if (!this.memory.extensionTick) {
+        this.memory.extensionTick = 0;
+    }
+    if (!this.memory.wallTick) {
+        this.memory.wallTick = 0;
+    }
     
-    if(this.memory.constructTick < 50) { this.memory.constructTick++; }
-    else
-    {
+    if (this.memory.constructTick < 50) {
+        this.memory.constructTick++;
+    } else {
         this.memory.constructTick = 0;
         this.createStructures();
     }
     
-    if(this.memory.wallTick < 125) { this.memory.wallTick++; }
-    else
-    {
-        if (this.controller.level >= 3)
-        {
+    if (this.memory.wallTick < 125) {
+        this.memory.wallTick++;
+    } else {
+        if (this.controller.level >= 3) {
             this.memory.wallTick = 0;
-            if (this.memory.storage) { this.createWalls(); }
+            if (this.memory.storage) {
+                this.createWalls();
+            }
         }
     }
     
-    if(this.memory.extensionTick < 150) { this.memory.extensionTick++; }
-    else
-    {
+    if (this.memory.extensionTick < 150) {
+        this.memory.extensionTick++;
+    } else {
         this.memory.extensionTick = 0;
         this.initRoads();
         this.createExtensions();
     }
-}
+};
 
 Room.prototype.showExtensionPlan = function()
 {
@@ -61,7 +66,7 @@ Room.prototype.showExtensionPlan = function()
 
         new RoomVisual(this.room).circle(spawn.pos.x + x, spawn.pos.y + y, {fill: 'yellow', stroke: 'yellow', radius: 0.25});
     }
-}
+};
 
 Room.prototype.initRoads = function()
 {
@@ -70,7 +75,7 @@ Room.prototype.initRoads = function()
     let spawn = Game.getObjectById(this.memory.spawn);
     if(spawn)
     {
-        // Initial Spawn Roads (incase swamp)
+        // Initial Spawn Roads (in case swamp)
         this.createConstructionSite(spawn.pos.x, spawn.pos.y - 1, STRUCTURE_ROAD);
         this.createConstructionSite(spawn.pos.x, spawn.pos.y - 3, STRUCTURE_ROAD);
         this.createConstructionSite(spawn.pos.x - 1, spawn.pos.y - 2, STRUCTURE_ROAD);
@@ -97,7 +102,7 @@ Room.prototype.initRoads = function()
             {
                 for(let i in results.path)
                 {
-                    if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                    if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                     if(roadCount >= maxRoads) { return; }
                 }
             }
@@ -108,7 +113,7 @@ Room.prototype.initRoads = function()
             {
                 for(let i in results.path)
                 {
-                    if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                    if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                     if(roadCount >= maxRoads) { return; }
                 }
             }
@@ -120,7 +125,7 @@ Room.prototype.initRoads = function()
         {
             for(let i in results.path)
             {
-                if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                 if(roadCount >= maxRoads) { return; }
             }
         }
@@ -138,7 +143,7 @@ Room.prototype.initRoads = function()
                 {
                     for(let i in results.path)
                     {
-                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                         if(roadCount >= maxRoads) { return; }
                     }
                 }
@@ -153,7 +158,7 @@ Room.prototype.initRoads = function()
                 {
                     for(let i in results.path)
                     {
-                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                         if(roadCount >= maxRoads) { return; }
                     }
                 }
@@ -168,7 +173,7 @@ Room.prototype.initRoads = function()
                 {
                     for(let i in results.path)
                     {
-                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                         if(roadCount >= maxRoads) { return; }
                     }
                 }
@@ -183,7 +188,7 @@ Room.prototype.initRoads = function()
                 {
                     for(let i in results.path)
                     {
-                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
+                        if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) { roadCount++; }
                         if(roadCount >= maxRoads) { return; }
                     }
                 }
@@ -191,21 +196,21 @@ Room.prototype.initRoads = function()
         }
 
         // Spawn to Mineral
-        (this.controller.level >= 6)
-        {
+        if (this.controller.level >= 6) {
             let mineral = Game.getObjectById(this.memory.minerals);
             let mineralObj = { pos: mineral.pos, range: 1 };
             let results = PathFinder.search(spawn.pos, mineralObj, { swampCost: 2});
-            if(!results.incomplete)
-            {
-                for(let i in results.path)
-                {
-                    if(this.createConstructionSite(results.path[i], STRUCTURE_ROAD) == OK) { roadCount++; }
-                    if(roadCount >= maxRoads) { return; }
+            if (!results.incomplete) {
+                for (let i in results.path) {
+                    if (this.createConstructionSite(results.path[i], STRUCTURE_ROAD) === OK) {
+                        roadCount++;
+                    }
+                    if (roadCount >= maxRoads) {
+                        return;
+                    }
                 }
             }
         }
-
     }
 };
 
@@ -240,7 +245,7 @@ Room.prototype.showBuildPlan = function()
     new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y + 1, {fill: 'grey', stroke: 'grey', radius: 0.15});
     new RoomVisual(this.room).circle(spawn.pos.x - 1, spawn.pos.y + 2, {fill: 'grey', stroke: 'grey', radius: 0.15});
     new RoomVisual(this.room).circle(spawn.pos.x + 1, spawn.pos.y + 2, {fill: 'grey', stroke: 'grey', radius: 0.15});
-}
+};
 
 Room.prototype.createStructures = function()
 {
@@ -271,6 +276,7 @@ Room.prototype.createStructures = function()
         this.createConstructionSite(spawn.pos.x + 1, spawn.pos.y - 3, STRUCTURE_RAMPART);   // terminal rampart
         // if extractor or construction site is not present
         this.buildExtractor();
+        // labs
     }
     if (this.controller.level >= 7)
     {
@@ -280,7 +286,12 @@ Room.prototype.createStructures = function()
     if (this.controller.level >= 8)
     {
         this.createConstructionSite(spawn.pos.x - 1, spawn.pos.y - 1, STRUCTURE_SPAWN);
-        this.createConstructionSite(spawn.pos.x + 1, spawn.pos.y - 1, STRUCTURE_RAMPART);   // spawn rampart
+        this.createConstructionSite(spawn.pos.x - 1, spawn.pos.y - 1, STRUCTURE_RAMPART);   // spawn rampart
+        this.createConstructionSite(spawn.pos.x - 1, spawn.pos.y - 5, STRUCTURE_NUKER);
+        this.createConstructionSite(spawn.pos.x - 1, spawn.pos.y - 5, STRUCTURE_RAMPART);   // nuker rampart
+        this.createConstructionSite(spawn.pos.x + 1, spawn.pos.y - 5, STRUCTURE_POWER_SPAWN);
+        this.createConstructionSite(spawn.pos.x + 1, spawn.pos.y - 5, STRUCTURE_RAMPART);   // powerspawn rampart
+        this.createConstructionSite(spawn.pos.x, spawn.pos.y - 6, STRUCTURE_OBSERVER);
     }
 };
 
@@ -289,7 +300,7 @@ Room.prototype.createLinks = function()
     let spawn = Game.getObjectById(this.memory.spawn);
     if (!this.memory.spawnLink || !Game.getObjectById(this.memory.spawnLink))
     {
-        if(!this.memory.sLinkPos && this.createConstructionSite(spawn.pos.x, spawn.pos.y - 4, STRUCTURE_LINK) == OK)
+        if(!this.memory.sLinkPos && this.createConstructionSite(spawn.pos.x, spawn.pos.y - 4, STRUCTURE_LINK) === OK)
         {
             this.memory.sLinkPos = { x: spawn.pos.x, y: spawn.pos.y - 4, roomName: this.name };
             console.log('new site id: ' + this.memory.sLinkPos.x + ', ' + this.memory.sLinkPos.y);
@@ -300,7 +311,7 @@ Room.prototype.createLinks = function()
                 new RoomPosition(this.memory.sLinkPos.x, this.memory.sLinkPos.y, this.memory.sLinkPos.roomName));
             for(let link of structures)
             {
-                if (link.structureType == STRUCTURE_LINK)
+                if (link.structureType === STRUCTURE_LINK)
                 {
                     this.memory.spawnLink = link.id;
                     console.log('new link id: ' + link.id);
@@ -312,7 +323,7 @@ Room.prototype.createLinks = function()
     if (!this.memory.controllerLink || !Game.getObjectById(this.memory.controllerLink))
     {
         let constructPos = findConstructionSite(this.controller, this.name);
-        if (!this.memory.cLinkPos && this.createConstructionSite(constructPos, STRUCTURE_LINK) == OK)
+        if (!this.memory.cLinkPos && this.createConstructionSite(constructPos, STRUCTURE_LINK) === OK)
         {
             this.memory.cLinkPos = { x: constructPos.x, y: constructPos.y, roomName: this.name };
             console.log('new site id: ' + this.memory.cLinkPos.x + ', ' + this.memory.cLinkPos.y);
@@ -323,7 +334,7 @@ Room.prototype.createLinks = function()
                 new RoomPosition(this.memory.cLinkPos.x, this.memory.cLinkPos.y, this.memory.cLinkPos.roomName));
             for(let link of structures)
             {
-                if (link.structureType == STRUCTURE_LINK)
+                if (link.structureType === STRUCTURE_LINK)
                 {
                     this.memory.controllerLink = link.id;
                     console.log('new link id: ' + link.id);
@@ -331,7 +342,7 @@ Room.prototype.createLinks = function()
             }
         }
     }
-}
+};
 
 Room.prototype.createExtensions = function()
 {
@@ -361,57 +372,7 @@ Room.prototype.createExtensions = function()
 
         }
     }
-    /*
-    let rowLength = 4;
-    let countMax = 6;
-    
-    // Defines where the rows start - measured for row length 6
-    let array = [
-        { x:  2,  y:  0 },
-        { x: -5,  y:  0 },
-        { x:  2,  y: -2 },
-        { x: -5,  y: -2 },
-        { x:  2,  y:  2 },
-        { x: -5,  y:  2 },
-        { x:  2,  y: -4 },
-        { x: -5,  y: -4 },
-        { x:  2,  y:  4 },
-        { x: -5,  y:  4 },
-        { x:  2,  y: -6 },
-        { x: -5,  y: -6 },
-        { x:  2,  y:  6 },
-        { x: -5,  y:  6 }
-        ];
-    
-    let spawn = Game.getObjectById(this.memory.spawn);
-    if (!spawn) { return; }
-    
-    let spawnPos = new RoomPosition(spawn.pos.x, spawn.pos.y, spawn.room.name);
-    let count = 0;
-    
-    // Loops through rows of extensions
-    for(let i = 0; i < array.length; i++)
-    {
-        for(let j = 0; j < rowLength; j++)
-        {
-            let position = new RoomPosition(spawnPos.x + array[i].x + j, spawnPos.y + array[i].y, spawn.room.name);
-            if(checkIfBuildable(position))
-            {
-                //console.log('[i]: ' + i + ' [j]: ' + j + ' [building ext]: ' + position);
-                if (this.createConstructionSite(position, STRUCTURE_EXTENSION) == OK)
-                {
-                    count++;
-                    this.createConstructionSite(new RoomPosition(position.x, position.y - 1, spawn.room.name), STRUCTURE_ROAD);
-                    this.createConstructionSite(new RoomPosition(position.x, position.y + 1, spawn.room.name), STRUCTURE_ROAD);
-                    if (j == rowLength - 1) { this.createConstructionSite(new RoomPosition(position.x + 1, position.y, spawn.room.name), STRUCTURE_ROAD); }
-                    else if (j == 0) { this.createConstructionSite(new RoomPosition(position.x - 1, position.y, spawn.room.name), STRUCTURE_ROAD); }
-                }
-                if (count >= countMax) { return; }
-            }
-        }
-    }
-    */
-}
+};
 
 Room.prototype.createWalls = function()
 {
@@ -423,7 +384,7 @@ Room.prototype.createWalls = function()
     for(let i = 0; i < leftExits.length; i++)
     {
         let buildRampart = false;
-        if(i % 3 == 0) { buildRampart = true; }
+        if(i % 3 === 0) { buildRampart = true; }
         let newPos = leftExits[i];
         if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 2, 0, buildRampart)) { count++; }
         if(nearEnd)
@@ -434,7 +395,7 @@ Room.prototype.createWalls = function()
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 2, -1, false)) { count++; }
             nearEnd = false;
         }
-        if (!nearEnd && ((i != leftExits.length - 1 && Math.abs(leftExits[i+1].y - leftExits[i].y) != 1) || i == leftExits.length - 1))
+        if (!nearEnd && ((i !== leftExits.length - 1 && Math.abs(leftExits[i+1].y - leftExits[i].y) !== 1) || i === leftExits.length - 1))
         {
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 0, 2, false)) { count++; }
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 1, 2, false)) { count++; }
@@ -450,7 +411,7 @@ Room.prototype.createWalls = function()
     for(let i = 0; i < rightExits.length; i++)
     {
         let buildRampart = false;
-        if(i % 3 == 0) { buildRampart = true; }
+        if(i % 3 === 0) { buildRampart = true; }
         let newPos = rightExits[i];
         if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), -2, 0, buildRampart)) { count++; }
         if(nearEnd)
@@ -461,7 +422,7 @@ Room.prototype.createWalls = function()
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), -2, -1, false)) { count++; }
             nearEnd = false;
         }
-        if (!nearEnd && ((i != rightExits.length - 1 && Math.abs(rightExits[i+1].y - rightExits[i].y) != 1) || i == rightExits.length - 1))
+        if (!nearEnd && ((i !== rightExits.length - 1 && Math.abs(rightExits[i+1].y - rightExits[i].y) !== 1) || i === rightExits.length - 1))
         {
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 0, 2, false)) { count++; }
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), -1, 2, false)) { count++; }
@@ -477,7 +438,7 @@ Room.prototype.createWalls = function()
     for(let i = 0; i < topExits.length; i++)
     {
         let buildRampart = false;
-        if(i % 3 == 0) { buildRampart = true; }
+        if(i % 3 === 0) { buildRampart = true; }
         let newPos = topExits[i];
         if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 0, 2, buildRampart)) { count++; }
         if(nearEnd)
@@ -488,7 +449,7 @@ Room.prototype.createWalls = function()
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), -1, 2, false)) { count++; }
             nearEnd = false;
         }
-        if (!nearEnd && ((i != topExits.length - 1 && Math.abs(topExits[i+1].x - topExits[i].x) != 1) || i == topExits.length - 1))
+        if (!nearEnd && ((i !== topExits.length - 1 && Math.abs(topExits[i+1].x - topExits[i].x) !== 1) || i === topExits.length - 1))
         {
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 2, 0, false)) { count++; }
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 2, 1, false)) { count++; }
@@ -504,7 +465,7 @@ Room.prototype.createWalls = function()
     for(let i = 0; i < botExits.length; i++)
     {
         let buildRampart = false;
-        if(i % 3 == 0) { buildRampart = true; }
+        if(i % 3 === 0) { buildRampart = true; }
         let newPos = botExits[i];
         if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 0, -2, buildRampart)) { count++; }
         if(nearEnd)
@@ -515,7 +476,7 @@ Room.prototype.createWalls = function()
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), -1, -2, false)) { count++; }
             nearEnd = false;
         }
-        if (!nearEnd && ((i != botExits.length - 1 && Math.abs(botExits[i+1].x - botExits[i].x) != 1) || i == botExits.length - 1))
+        if (!nearEnd && ((i !== botExits.length - 1 && Math.abs(botExits[i+1].x - botExits[i].x) !== 1) || i === botExits.length - 1))
         {
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 2, 0, false)) { count++; }
             if(this.buildWall(new RoomPosition(newPos.x, newPos.y, this.name), 2, -1, false)) { count++; }
@@ -525,7 +486,7 @@ Room.prototype.createWalls = function()
         }
         if (count >= maxCount) { return; }
     }
-}
+};
 
 // RoomPosition, x offset, y offset
 Room.prototype.buildWall = function(pos, x, y, rampart)
@@ -535,11 +496,27 @@ Room.prototype.buildWall = function(pos, x, y, rampart)
     newPos.y += y;
     if(checkIfBuildable(newPos))
     {
-        if(rampart == true && this.createConstructionSite(newPos, STRUCTURE_RAMPART) == OK) { return true; }
-        else if(this.createConstructionSite(newPos, STRUCTURE_WALL) == OK) { return true; }
+        if(rampart === true && this.createConstructionSite(newPos, STRUCTURE_RAMPART) === OK) { return true; }
+        else if(this.createConstructionSite(newPos, STRUCTURE_WALL) === OK) { return true; }
     }
     return false;
-}
+};
+
+Room.prototype.buildLab = function(origin) {
+
+    if(this.createConstructionSite(origin.x, origin.y + 2, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 1, origin.y + 2, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 1, origin.y + 3, STRUCTURE_LAB) === OK) { return true; }
+
+    else if(this.createConstructionSite(origin.x + 1, origin.y + 3, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x + 1, origin.y + 4, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x, origin.y + 4, STRUCTURE_LAB) === OK) { return true; }
+
+    else if(this.createConstructionSite(origin.x - 2, origin.y + 3, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 2, origin.y + 4, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x, origin.y + 5, STRUCTURE_LAB) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 1, origin.y + 5, STRUCTURE_LAB) === OK) { return true; }
+};
 
 Room.prototype.buildTower = function(origin)
 {
@@ -547,10 +524,10 @@ Room.prototype.buildTower = function(origin)
     else if(this.createTopTower()) { return true; }
     else if(this.createLeftTower()) { return true; }
     else if(this.createRightTower()) { return true; }
-    else if(this.createConstructionSite(origin.x - 1, origin.y + 1, STRUCTURE_TOWER) == OK) { return true; }
-    else if(this.createConstructionSite(origin.x + 1, origin.y + 1, STRUCTURE_TOWER) == OK) { return true; }
-    else if(this.createConstructionSite(origin.x, origin.y + 2, STRUCTURE_TOWER) == OK) { return true; }
-    else if(this.createConstructionSite(origin.x, origin.y + 3, STRUCTURE_TOWER) == OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 2, origin.y - 2, STRUCTURE_TOWER) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 2, origin.y - 4, STRUCTURE_TOWER) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 1, origin.y - 6, STRUCTURE_TOWER) === OK) { return true; }
+    else if(this.createConstructionSite(origin.x - 2, origin.y - 5, STRUCTURE_TOWER) === OK) { return true; }
     else { return false; }
 };
 
@@ -564,22 +541,22 @@ Room.prototype.createBotTower = function()
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x + i, origin.y);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x - i, origin.y);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x + i, origin.y - 1);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x - i, origin.y - 1);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
     }
     return false;
@@ -595,22 +572,22 @@ Room.prototype.createTopTower = function()
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x + i, origin.y);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x - i, origin.y);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x + i, origin.y + 1);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x - i, origin.y + 1);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
     }
     return false;
@@ -626,22 +603,22 @@ Room.prototype.createLeftTower = function()
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x, origin.y + i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x, origin.y - i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x + 1, origin.y + i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x + 1, origin.y - i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
     }
         return false;
@@ -657,41 +634,41 @@ Room.prototype.createRightTower = function()
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x, origin.y + i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x, origin.y - i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
         for(let i = 0; i < 7; i++)
         {
             ret = this.checkAndBuildTower(origin.x - 1, origin.y + i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
             
             ret = this.checkAndBuildTower(origin.x - 1, origin.y - i);
-            if(ret == 'built') { return true; }
-            else if(ret == 'exists') { return false; }
+            if(ret === 'built') { return true; }
+            else if(ret === 'exists') { return false; }
         }
     }
     return false;
 };
 
-Room.prototype.checkAndBuildTower = function(x, y)
-{
+Room.prototype.checkAndBuildTower = function(x, y) {
     let results = this.lookForAt(LOOK_STRUCTURES, x, y);
-    if(_.filter(results, function(s) { return s.structureType == STRUCTURE_TOWER; }).length > 0) { return 'exists'; }
-    else if(this.createConstructionSite(x, y, STRUCTURE_TOWER) == OK) { return 'built'; }
+    if(_.filter(results, function(s) { return s.structureType === STRUCTURE_TOWER; }).length > 0) {
+        this.createConstructionSite(x, y, STRUCTURE_RAMPART);
+        return 'exists';
+    }
+    else if(this.createConstructionSite(x, y, STRUCTURE_TOWER) === OK) { return 'built'; }
     else { return 'unable'; }
-}
+};
 
-Room.prototype.buildExtractor = function()
-{
+Room.prototype.buildExtractor = function() {
     let mineral = Game.getObjectById(this.memory.minerals);
-    let x; let y;
     this.createConstructionSite(mineral.pos.x, mineral.pos.y, STRUCTURE_EXTRACTOR);
-}
+};
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;

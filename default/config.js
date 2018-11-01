@@ -10,8 +10,8 @@ global.config =
         reportHostileNeighbors: true,
         spawnScouts: false,
         scoutTimer: 300,
-        minWallHits: 1000000,
-        enableTerminal: true,
+        minWallHits: 10000000,
+        enableTerminal: false,
     },
 
     visuals:

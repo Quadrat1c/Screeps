@@ -22,7 +22,7 @@ Creep.prototype.doRepair = function()
         let target = Game.getObjectById(this.memory.target);
         if (!target)
         {
-            let spawn = Game.getObjectById(this.room.memory.spawn);
+            var spawn = Game.getObjectById(this.room.memory.spawn);
             if (spawn)
             {
                 if (spawn.recycleCreep(this) == ERR_NOT_IN_RANGE)

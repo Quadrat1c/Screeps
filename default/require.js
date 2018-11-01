@@ -15,6 +15,7 @@ require('role.mineralMiner');
 require('role.repairer');
 require('role.scout');
 require('role.signer');
+require('role.labTech');
 require('role.supplier');
 require('role.upgrader');
 require('role.roomBuilder');

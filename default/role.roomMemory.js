@@ -3,22 +3,37 @@
 Room.prototype.checkRoom = function()
 {
     this.init();
-    
+
     // From here onwards is for neighboring rooms only
     if(!this.memory.neighborData) { this.memory.neighborData = {}; }
-    
+
     if(this.controller)
     {
         this.memory.neighborData.hostileControlled = (this.controller.level > 0 && !this.controller.my);
     }
-    
+
     let enemyCreeps = this.find(FIND_HOSTILE_CREEPS);
     let enemyStructures = this.find(FIND_HOSTILE_STRUCTURES);
     this.memory.neighborData.hostile = enemyCreeps.length > 0 || enemyStructures.length > 0;
-    
+
+    if (enemyCreeps) {
+        let opsAttack = 0;
+        let opsRanged = 0;
+        let opsHeal = 0;
+        for (let i in enemyCreeps) {
+            opsAttack += enemyCreeps[i].getActiveBodyparts(ATTACK);
+            opsRanged += enemyCreeps[i].getActiveBodyparts(RANGED_ATTACK);
+            opsHeal += enemyCreeps[i].getActiveBodyparts(HEAL);
+        }
+        this.memory.neighborData.opsAttack = opsAttack;
+        this.memory.neighborData.opsRanged = opsRanged;
+        this.memory.neighborData.opsHeal = opsHeal;
+    }
+
+
     // Init neighbor operations memory
     if(!this.memory.neighborData.claimer) { this.memory.neighborData.claimer = 'none'; }
-    
+
     let skLair = this.find(FIND_HOSTILE_STRUCTURES).filter(a => a.structureType === 'keeperLair').map(a => a.id);
     if (skLair.length > 0)
     {
@@ -42,7 +57,13 @@ Room.prototype.cacheRoom = function()
         //this.cacheContainers();
         this.cacheSites();
         this.cacheStorage();
-        this.cacheTerminal();
+        if (this.controller.level >= 6) {
+            this.cacheTerminal();
+            if (this.controller.level >= 8) {
+                this.cacheNuker();
+                this.cacheObserver();
+            }
+        }
     }
 };
 
@@ -68,7 +89,7 @@ Room.prototype.findExitPositions = function()
         {
             let target = new RoomPosition(0, i, this.name);
             let terrain = target.lookFor(LOOK_TERRAIN);
-            if (terrain[0] != 'wall')
+            if (terrain[0] !== 'wall')
             {
                 leftPos.push(target);
             }
@@ -83,7 +104,7 @@ Room.prototype.findExitPositions = function()
         {
             let target = new RoomPosition(49, i, this.name);
             let terrain = target.lookFor(LOOK_TERRAIN);
-            if (terrain[0] != 'wall')
+            if (terrain[0] !== 'wall')
             {
                 rightPos.push(target);
             }
@@ -98,7 +119,7 @@ Room.prototype.findExitPositions = function()
         {
             let target = new RoomPosition(i, 0, this.name);
             let terrain = target.lookFor(LOOK_TERRAIN);
-            if (terrain[0] != 'wall')
+            if (terrain[0] !== 'wall')
             {
                 topPos.push(target);
             }
@@ -113,7 +134,7 @@ Room.prototype.findExitPositions = function()
         {
             let target = new RoomPosition(i, 49, this.name);
             let terrain = target.lookFor(LOOK_TERRAIN);
-            if (terrain[0] != 'wall')
+            if (terrain[0] !== 'wall')
             {
                 botPos.push(target);
             }
@@ -126,7 +147,7 @@ Room.prototype.cacheTowers = function()
 {
     let structures = this.find(FIND_MY_STRUCTURES, 
     {
-        filter: (structure) => (structure.structureType == STRUCTURE_TOWER)
+        filter: (structure) => (structure.structureType === STRUCTURE_TOWER)
     });
     
     let arr = [];
@@ -141,7 +162,7 @@ Room.prototype.cacheRoads = function()
 {
     let structures = this.find(FIND_STRUCTURES, 
     {
-        filter: (structure) => (structure.structureType == STRUCTURE_ROAD)
+        filter: (structure) => (structure.structureType === STRUCTURE_ROAD)
     });
     
     let arr = [];
@@ -156,7 +177,7 @@ Room.prototype.cacheContainers = function()
 {
     let structures = this.find(FIND_STRUCTURES, 
     {
-        filter: (structure) => (structure.structureType == STRUCTURE_CONTAINER)
+        filter: (structure) => (structure.structureType === STRUCTURE_CONTAINER)
     });
     
     let arr = [];
@@ -187,7 +208,7 @@ Room.prototype.cacheStorage = function()
         {
             filter: (structure) =>
             {
-                return (structure.structureType == STRUCTURE_STORAGE);
+                return (structure.structureType === STRUCTURE_STORAGE);
             }
         });
         if(storage[0])
@@ -205,12 +226,38 @@ Room.prototype.cacheTerminal = function()
         {
             filter: (structure) =>
             {
-                return (structure.structureType == STRUCTURE_TERMINAL);
+                return (structure.structureType === STRUCTURE_TERMINAL);
             }
         });
         if(terminal[0])
         {
             this.memory.terminal = terminal[0].id;
+        }
+    }
+};
+
+Room.prototype.cacheNuker = function() {
+  if (!this.memory.nuker || !Game.getObjectById(this.memory.nuker)) {
+      let nuker = this.find(FIND_MY_STRUCTURES, {
+          filter: (structure) => {
+              return (structure.structureType === STRUCTURE_NUKER);
+          }
+      });
+      if (nuker[0]) {
+          this.memory.nuker = nuker[0].id;
+      }
+  }
+};
+
+Room.prototype.cacheObserver = function() {
+    if (!this.memory.observer || !Game.getObjectById(this.memory.observer)) {
+        let observer = this.find(FIND_MY_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType === STRUCTURE_OBSERVER);
+            }
+        });
+        if (observer[0]) {
+            this.memory.observer = observer[0].id;
         }
     }
 };

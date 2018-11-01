@@ -1,5 +1,6 @@
 Object.defineProperty(Source.prototype, 'memory',
 {
+    configurable: true,
     get: function()
     {
         if(_.isUndefined(Memory.sources))

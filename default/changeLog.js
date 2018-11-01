@@ -2,12 +2,14 @@
 /*
 
 Current TODO Checklist:
-[] Fix auto attacker spawner (detect safemode rooms OR owned rooms)
-	[] Basic defense for longrange harvesting rooms
-	[] Active defense for owned rooms
 [] Create Drainer role and autospawning
+[] Re-implement Melee attackers
+[] Attack squads
+[] Placements for end game buildings
+	[] fix left tower bug
+[] Get labs working
+[] make scouts more randomized (they dont go far)
 [] Automated Expanding
-[] Fix Ranger kiting
 
 
 0.0.1
@@ -41,23 +43,24 @@ Current TODO Checklist:
 		+ test danger and dangerWait
 	+ automated orders (simple version)
 
+0.0.6
+    + Dynamic defense (creeps will scale to threats)
+	+ Fixed ranger kiting
+	+ Fill nukes with energy
+	+ Claimers max 5 claim parts
+	+ Body parts mod sorter
+
+
 Completed TODO's:
 [x] Visual Build Planner v0.0.4 - primitive version
 [x] Automated longrange harvesting/haulers/build containers v0.0.4
 [x] If longDistance sees a hostile with attack parts run to homeRoom v0.0.5
 [x] Test Mineral/Extractor automated building v0.0.5
 [x] Create a mineral harvester v0.0.5
-
-
-
-
-
-
-
-
-
-
-
+[x] Fix Ranger kiting v0.0.6
+[x] Fix auto attacker spawner (detect safemode rooms OR owned rooms) v0.0.6
+	[x] Basic defense for longrange harvesting rooms v0.0.6
+	[x] Active defense for owned rooms v0.0.6
 
 
 
