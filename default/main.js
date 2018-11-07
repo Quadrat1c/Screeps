@@ -11,7 +11,7 @@
 require('require');
 
 module.exports.loop = function () {
-    let ver = '0.0.6';
+    let ver = '0.0.7';
 
     // CPU usage variables
     let initCPU, memCPU, roomCPU, creepCPU, finalCPU;
@@ -36,7 +36,7 @@ module.exports.loop = function () {
 
     // Process rooms and their structures
     for (let name in Game.rooms) {
-        var room = Game.rooms[name];
+        let room = Game.rooms[name];
         let spawns = room.find(FIND_MY_SPAWNS);
         if (spawns.length) { 
             room.run(); 

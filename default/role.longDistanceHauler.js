@@ -80,7 +80,7 @@ Creep.prototype.doLongDistanceHaul = function()
                     }
                 } else {
                     let nuker = Game.getObjectById(this.room.memory.nuker);
-                    if (nuker && this.room.storage.store[RESOURCE_ENERGY] >= 100000 && nuker.energy <= 300000) {
+                    if (nuker && this.room.storage.store[RESOURCE_ENERGY] >= 100000 && nuker.energy < 300000) {
                         this.travelTo(nuker);
                         if (this.transfer(nuker, RESOURCE_ENERGY) === OK) {
                             this.memory.transferred = this.memory.transferred + this.carry[RESOURCE_ENERGY];

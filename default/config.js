@@ -11,7 +11,9 @@ global.config =
         spawnScouts: false,
         scoutTimer: 300,
         minWallHits: 10000000,
-        enableTerminal: false,
+        enableTerminal: true,
+        enableLabs: true,
+        MAKE_REACTIONS_WITH_3LABS: false,
     },
 
     visuals:

@@ -48,7 +48,7 @@ Creep.prototype.addExitsToSearch = function() {
         this.memory.search = [];
     }
     let rooms = Game.map.describeExits(this.room.name);
-    for (var key in rooms) {
+    for (let key in rooms) {
         if(this.memory.seen.indexOf(rooms[key]) === -1
             && this.memory.search.indexOf(rooms[key]) === -1) {
             this.memory.search.push(rooms[key]);

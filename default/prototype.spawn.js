@@ -257,31 +257,65 @@ StructureSpawn.prototype.doSpawn = function(room) {
                 }
             }
             
-            // Spawn dynamic ranger
-            if(!Memory.rooms[name].neighborData.skLair && Memory.rooms[name].neighborData.hostile && Memory.rooms[name].creeps.rangers < 1) {
+            // Spawn dynamic defender
+            if(!Memory.rooms[name].neighborData.skLair && Memory.rooms[name].neighborData.hostile) {
+                if (Memory.rooms[name].creeps.bouncers >= 1) { return; }
+                if (Memory.rooms[name].creeps.rangers >= 1) { return; }
+
                 let opsAttack = Memory.rooms[name].neighborData.opsAttack;
                 let opsRanged = Memory.rooms[name].neighborData.opsRanged;
                 let opsHeal = Memory.rooms[name].neighborData.opsHeal;
+                let creepOwner = Memory.rooms[name].neighborData.creepOwner.toString();
+
+                if (creepOwner.includes('Invader')) {
+                    let ret = this.createDynamicBouncer(room.energyCapacityAvailable, opsAttack, opsRanged, opsHeal, name);
+                    if(ret === OK) {
+                        Memory.rooms[name].creeps.bouncers++;
+                        if(global.config.options.reportHostileNeighbors) {
+                            console.log(txt(COLOR.info, 'Spawned dynamic bouncer for room ' + name));
+                            return;
+                        }
+                    } else if(ret !== ERR_NOT_ENOUGH_ENERGY) {
+                        console.log(txt(COLOR.error, 'Error spawning dynamic bouncer: ' + ret));
+                        return;
+                    }
+                    console.log(txt(COLOR.error, 'Error spawning dynamic bouncer: ' + name));
+                    return;
+                }
 
                 if (opsAttack >= 1 || opsRanged >= 1) {
                     let ret = this.createDynamicRanger(room.energyCapacityAvailable, opsAttack, opsRanged, opsHeal, name);
                     if(ret === OK) {
                         Memory.rooms[name].creeps.rangers++;
                         if(global.config.options.reportHostileNeighbors) {
-                            console.log(txt(COLOR.info, 'Spawned dynamic defender for room ' + name));
+                            console.log(txt(COLOR.info, 'Spawned dynamic ranger for room ' + name));
                             return;
                         }
                     } else if(ret !== ERR_NOT_ENOUGH_ENERGY) {
-                        console.log(txt(COLOR.error, 'Error spawning dynamic defender: ' + ret));
+                        console.log(txt(COLOR.error, 'Error spawning dynamic ranger: ' + ret));
                         return;
                     }
-                    console.log(txt(COLOR.error, 'Error spawning dynamic defender: ' + name));
+                    console.log(txt(COLOR.error, 'Error spawning dynamic ranger: ' + name));
                     return;
                 } else {
                     // No Threat
                     return;
                 }
             }
+        }
+    }
+
+    // Create labTech
+    if (room.controller.level >= 8) {
+        // Check if we have a labTech
+        if (room.memory.creeps.labTechs < 1) {
+            let ret = this.createLabTech(room.energyCapacityAvailable);
+            if (ret === OK) {
+                room.memory.creeps.labTechs++;
+            } else if (ret !== ERR_NOT_ENOUGH_ENERGY) {
+                console.log(txt(COLOR.error, 'Error spawning labTech: ' + ret));
+            }
+            return;
         }
     }
     
@@ -352,6 +386,22 @@ StructureSpawn.prototype.createHauler = function(energy) {
     
     let name = 'hauler-' + generateRandomId() + generateRandomId();
     return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'hauler', hauling: false} });
+};
+
+StructureSpawn.prototype.createLabTech = function(energy) {
+    let numberOfParts = getMinimum(Math.floor(energy / 150), 16);
+    let mods = [];
+
+    for(let i = 0; i < numberOfParts; i++) {
+        mods.push(CARRY);
+        mods.push(CARRY);
+    }
+    for(let i = 0; i < numberOfParts; i++) {
+        mods.push(MOVE);
+    }
+
+    let name = 'labTech-' + generateRandomId() + generateRandomId();
+    return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'labTech', hauling: false} });
 };
 
 StructureSpawn.prototype.createGeneric = function(energy, roleName) {
@@ -596,7 +646,6 @@ StructureSpawn.prototype.createDynamicRanger = function(energy, attackParts, ran
     mods.push(MOVE);
 
     console.log('TotalCost: ' + totalCost + ' EnergyCapacity: ' + energy + ' Room: ' + targetRoom);
-    //console.log(this.sortParts(mods));
     if (totalCost <= energy) {
         let name = 'ranger-' + generateRandomId() + generateRandomId();
         return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'ranger', target: targetRoom} });
@@ -605,8 +654,64 @@ StructureSpawn.prototype.createDynamicRanger = function(energy, attackParts, ran
     }
 };
 
+StructureSpawn.prototype.createDynamicBouncer = function(energy, attackParts, rangedParts, healParts, targetRoom) {
+    let totalCost = 0;
+    let mods = [];
+
+    // attack
+    for (let i = 0; i < attackParts; i++) {
+        totalCost += 80;
+        totalCost += 50;
+        mods.push(ATTACK);
+        mods.push(MOVE);
+        totalCost += 80;
+        totalCost += 50;
+        mods.push(ATTACK);
+        mods.push(MOVE);
+    }
+
+    // ranged
+    for (let i = 0; i < rangedParts; i++) {
+        totalCost += 80;
+        totalCost += 50;
+        mods.push(ATTACK);
+        mods.push(MOVE);
+    }
+    // heal
+    for (let i = 0; i < healParts; i++) {
+        totalCost += 80;
+        totalCost += 50;
+        mods.push(ATTACK);
+        mods.push(MOVE);
+    }
+
+    // Force a Attack/move
+    totalCost += 80;
+    totalCost += 50;
+    mods.push(ATTACK);
+    mods.push(MOVE);
+
+    // Force 2 tough/move
+    totalCost += 10;
+    totalCost += 50;
+    mods.push(TOUGH);
+    mods.push(MOVE);
+    totalCost += 10;
+    totalCost += 50;
+    mods.push(TOUGH);
+    mods.push(MOVE);
+
+    console.log('TotalCost: ' + totalCost + ' EnergyCapacity: ' + energy + ' Room: ' + targetRoom);
+    if (totalCost <= energy) {
+        let name = 'bouncer-' + generateRandomId() + generateRandomId();
+        return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'bouncer', target: targetRoom} });
+    } else {
+        console.log(txt(COLOR.warn, '[CANNOT SPAWN Dynamic Bouncer] TotalCost: ' + totalCost + ' EnergyCapacity: ' + energy + ' Room: ' + targetRoom));
+    }
+};
+
 StructureSpawn.prototype.partsComparator = function (a, b) {
-    let partsOrder = [TOUGH, CLAIM, WORK, CARRY, ATTACK, MOVE, RANGED_ATTACK, HEAL];
+    let partsOrder = [TOUGH, CLAIM, WORK, CARRY, MOVE, ATTACK, RANGED_ATTACK, HEAL];
     let indexOfA = partsOrder.indexOf(a);
     let indexOfB = partsOrder.indexOf(b);
     return indexOfA - indexOfB;

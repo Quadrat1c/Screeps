@@ -25,4 +25,5 @@ require('prototype.room');
 require('prototype.creep');
 require('prototype.tower');
 require('prototype.terminal');
+require('room.lab');
 require('utils');

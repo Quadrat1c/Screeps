@@ -15,12 +15,12 @@ Creep.prototype.doMineralMine = function()
     }*/
     //console.log(this.carry[RESOURCE_ENERGY]);
     //console.log(_.sum(this.carry));
-    if(!this.memory.working && _.sum(this.carry) == this.carryCapacity)
+    if(!this.memory.working && _.sum(this.carry) === this.carryCapacity)
     {
         this.memory.working = true;
         //this.say('Carrying');
     }
-    if(this.memory.working && _.sum(this.carry) == 0)
+    if(this.memory.working && _.sum(this.carry) === 0)
     {
         this.memory.working = false;
         this.memory.target = this.findMineral();
@@ -31,13 +31,13 @@ Creep.prototype.doMineralMine = function()
     {
         //if(this.getEnergy()) { return; }
         
-        if (!this.memory.target || this.memory.target == 'error')
+        if (!this.memory.target || this.memory.target === 'error')
         {
             this.memory.target = this.findMineral();
         }
         
         let mineral = Game.getObjectById(this.memory.target);
-        if(this.harvest(mineral) == ERR_NOT_IN_RANGE)
+        if(this.harvest(mineral) === ERR_NOT_IN_RANGE)
         {
             this.travelTo(mineral);
         }
@@ -54,7 +54,7 @@ Creep.prototype.findStorageOrTerminal = function()
     {
         filter: (structure) =>
         {
-            return (structure.structureType == STRUCTURE_TERMINAL); //|| 
+            return (structure.structureType === STRUCTURE_TERMINAL); //||
                     //structure.structureType == STRUCTURE_STORAGE); //&&
                     //structure.store < structure.storeCapacity;
         }

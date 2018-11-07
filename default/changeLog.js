@@ -3,11 +3,8 @@
 
 Current TODO Checklist:
 [] Create Drainer role and autospawning
-[] Re-implement Melee attackers
 [] Attack squads
-[] Placements for end game buildings
-	[] fix left tower bug
-[] Get labs working
+[] fix left tower bug
 [] make scouts more randomized (they dont go far)
 [] Automated Expanding
 
@@ -50,6 +47,13 @@ Current TODO Checklist:
 	+ Claimers max 5 claim parts
 	+ Body parts mod sorter
 
+0.0.7
+    + Improved defense for Invaders (use melee)
+    + Labs are working (semi automatic)
+    + Fill nukes with Ghodium
+    + Placement for end game buildings
+    + labTech role working
+
 
 Completed TODO's:
 [x] Visual Build Planner v0.0.4 - primitive version
@@ -61,7 +65,7 @@ Completed TODO's:
 [x] Fix auto attacker spawner (detect safemode rooms OR owned rooms) v0.0.6
 	[x] Basic defense for longrange harvesting rooms v0.0.6
 	[x] Active defense for owned rooms v0.0.6
-
-
-
+[x] Re-implement Melee attackers (works for invaders) v0.0.7
+[x] Get labs working (semi automatic) v0.0.7
+[x] Placements for end game buildings v0.0.7
 */

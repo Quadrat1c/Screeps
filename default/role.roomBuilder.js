@@ -277,6 +277,7 @@ Room.prototype.createStructures = function()
         // if extractor or construction site is not present
         this.buildExtractor();
         // labs
+        this.buildLab(spawn.pos);
     }
     if (this.controller.level >= 7)
     {

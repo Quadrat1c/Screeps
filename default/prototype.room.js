@@ -7,6 +7,7 @@ Room.prototype.run = function() {
     this.runDefCon();
     this.tryConstruct();
     this.cacheRoom();
+    this.doOperations();
     
     if (global.config.options.reportControllerUpgrade) {
         this.reportControllerUpgrade();
@@ -15,7 +16,7 @@ Room.prototype.run = function() {
 
 Room.prototype.runDefCon = function() {
     const threats = this.find(FIND_HOSTILE_CREEPS, {
-        filter: c => c.getActiveBodyparts(ATTACK) || c.getActiveBodyparts(RANGED_ATTACK)
+        filter: c => c.getActiveBodyparts(ATTACK) || c.getActiveBodyparts(RANGED_ATTACK) || c.getActiveBodyparts(WORK)
     });
     if (threats && threats.length) {
         let opsTotal = 0;
@@ -25,7 +26,7 @@ Room.prototype.runDefCon = function() {
             opsTotal += threats[i].getActiveBodyparts(WORK);
         }
         if (opsTotal > 5) {
-            this.memory.defConMode = 'active'
+            this.memory.defConMode = 'active';
             console.log(txt(COLOR.warn, this.name + ' Threat: ' + opsTotal + ' DefCon Mode Activated.'));
         } else {
             console.log(txt(COLOR.warn, this.name + ' Threat: ' + opsTotal + ' Weak attack, DefCon is Inactive'));
@@ -60,24 +61,27 @@ Room.prototype.runEnergyCon = function() {
 };
 
 Room.prototype.init = function() {
+    let spawns;
     if (!this.memory.spawn) {
-        var spawns = this.find(FIND_MY_SPAWNS);
+        spawns = this.find(FIND_MY_SPAWNS);
         if (spawns.length) { this.memory.spawn = spawns[0].id; }
     }
-    
+
+    let sources;
     if (!this.memory.sources) {
         this.memory.sources = [];
-        var sources = this.find(FIND_SOURCES);
+        sources = this.find(FIND_SOURCES);
         for (let source of sources) {
             this.memory.sources.push(source.id);
             source.memory.harvester = 'none';
             source.memory.harvestPos = findConstructionSite(source, this.name);
         }
     }
-    
+
+    let minerals;
     if (!this.memory.minerals) {
         this.memory.minerals = [];
-        var minerals = this.find(FIND_MINERALS);
+        minerals = this.find(FIND_MINERALS);
         for (let mineral of minerals) {
             this.memory.minerals.push(mineral.id);
             //mineral.memory.mineralMiner = 'none';
@@ -86,7 +90,7 @@ Room.prototype.init = function() {
     }
 
     if (!this.memory.mineralType) {
-        let minerals = this.find(FIND_MINERALS);
+        minerals = this.find(FIND_MINERALS);
         for (let i in minerals) {
             let mineral = minerals[i];
             this.memory.mineralType = mineral.mineralType;
@@ -110,7 +114,7 @@ Room.prototype.init = function() {
 };
 
 Room.prototype.doUpkeep = function() {
-    var spawns = this.find(FIND_MY_SPAWNS);
+    let spawns = this.find(FIND_MY_SPAWNS);
     if (!spawns.length) {
         delete this.memory.spawn;
         return;
@@ -131,7 +135,7 @@ Room.prototype.doUpkeep = function() {
     }
     
     // Spawn creeps
-    var spawns = this.find(FIND_MY_SPAWNS);
+    spawns = this.find(FIND_MY_SPAWNS);
     for (let spawn of spawns) {
         spawn.doSpawn(this);
     }
@@ -156,8 +160,8 @@ Room.prototype.doUpkeep = function() {
     }
     
     // Check for missing harvesters
-    var sources = this.find(FIND_SOURCES);
-    for (var source of sources) {
+    let sources = this.find(FIND_SOURCES);
+    for (let source of sources) {
         if (source.memory.harvester === "active") {
             if (source.memory.checkTick && source.memory.checkTick <= 0) {
                 source.memory.harvester = "none";
@@ -166,21 +170,64 @@ Room.prototype.doUpkeep = function() {
             }
         }
     }
+};
 
+Room.prototype.doOperations = function () {
     // Operate Terminal Orders
     if (global.config.options.enableTerminal) {
         let terminals = this.find(FIND_MY_STRUCTURES, {
             filter: (structure) =>
             {
                 return (structure.structureType === STRUCTURE_TERMINAL); //||
-                        //structure.structureType == STRUCTURE_STORAGE); //&&
-                        //structure.store < structure.storeCapacity;
+                //structure.structureType == STRUCTURE_STORAGE); //&&
+                //structure.store < structure.storeCapacity;
             }
         });
 
         if (terminals) {
             for (let terminal of terminals) {
                 terminal.doTerminal(this);
+            }
+        }
+    }
+
+    // Operate Labs
+    if (global.config.options.enableLabs) {
+        let labs = this.find(FIND_MY_STRUCTURES, {
+            filter: (structure) => { return (structure.structureType === STRUCTURE_LAB) }
+        });
+
+        if (labs.length >= 6) {
+            if (this.flowerRegisterCheck(labs)) {
+                // TODO: get labs running
+                // labs are registered and ready to run!
+                let data = this.memory.resources.reactions;
+                let slave_a = Game.getObjectById(data.seed_a);
+                let slave_b = Game.getObjectById(data.seed_b);
+                if (slave_a.mineralAmount < 5) { return; }
+                if (slave_b.mineralAmount < 5) { return; }
+
+                let outputLabs = [];
+
+                //Grab the output labs from the room object. The output labs are the ones that aren't the inputs
+
+                for (let i in labs) {
+                    if (labs[i] === slave_a || labs[i] === slave_b)
+                        continue;
+                    outputLabs.push(labs[i]);
+                }
+
+                for (let i = 0; i < outputLabs.length; i++) {
+                    if (outputLabs[i].cooldown > 0) { return; }
+                    if (outputLabs[i].runReaction(slave_a, slave_b) === OK) {
+
+                    } else {
+                        console.log(outputLabs[i].runReaction(slave_a, slave_b));
+                    }
+                }
+            } else {
+                // we do not have registered labs run auto register
+                this.autoRegisterLabs(labs);
             }
         }
     }
@@ -211,7 +258,7 @@ Room.prototype.getSourceRangeInfo = function() {
     if (!this.memory.avgSourceRange || this.memory.avgSourceRange == null) {
         let range = 0;
         let spawn = Game.getObjectById(this.memory.spawn);
-        var sources = this.find(FIND_SOURCES);
+        let sources = this.find(FIND_SOURCES);
         
         for (let i = 0; i < sources.length; i++) {
             let sourcePos = { pos: sources[i].pos, range: 1 };
@@ -227,7 +274,7 @@ Room.prototype.getSourceRangeInfo = function() {
     
     if (!this.memory.avgSourceSeparation || this.memory.avgSourceSeparation == null) {
         let distance = 0;
-        var sources = this.find(FIND_SOURCES);
+        let sources = this.find(FIND_SOURCES);
         
         for (let i = 0; i < sources.length; i++) {
             let iPosition = new RoomPosition(sources[i].memory.harvestPos.x, sources[i].memory.harvestPos.y, this.name);
@@ -316,4 +363,15 @@ Room.prototype.tryColonize = function(spawn) {
         }
     }
     return false;
+};
+
+Room.prototype.createLabHub = function(labs) {
+    let cache = labs[0].room.memory.reactions.labHubs || {};
+    let key = labs[0].id;
+    cache[key] = {
+      lab1: labs[0].id,
+      lab2: labs[1].id,
+      outputLab: labs[2].id
+    };
+    labs[0].room.memory.reactions.labHubs = cache;
 };

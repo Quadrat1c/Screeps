@@ -5,7 +5,7 @@ StructureTower.prototype.activate = function() {
     let target;
     let healCount = -1;
     for (let i in hostiles) {
-        let count = _.filter(hostiles[i].body, function(bp){return bp == HEAL;}).length;
+        let count = _.filter(hostiles[i].body, function(bp){return bp === HEAL;}).length;
         if (count >= healCount) {
             healCount = count;
             target = hostiles[i];

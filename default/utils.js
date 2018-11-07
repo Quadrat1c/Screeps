@@ -33,7 +33,7 @@ cleanCreepMemory = function() {
           case "longDistanceHauler":
             Memory.sources[Memory.creeps[name].target].longHauler = "none";
             if (global.config.options.reportLongDistanceHauling) {
-              console.log(txt(COLOR.success, "Long distance hauler expired - Transferred: " + Memory.creeps[name].transferred + " Target: " + Memory.creeps[name].target));
+              console.log(txt(COLOR.success, "Long distance hauler expired - Transferred: " + Memory.creeps[name].transferred + " Target: " + Memory.creeps[name].target + " Room: " + Memory.creeps[name].homeRoom));
             }
             break;
           case "longDistanceBuilder":
@@ -55,6 +55,9 @@ cleanCreepMemory = function() {
             break;
           case "ranger":
             Memory.rooms[Memory.creeps[name].target].creeps.rangers--;
+            break;
+          case "labTech":
+              Memory.rooms[Memory.creeps[name].homeRoom].creeps.labTechs--;
             break;
           default:
             break;
@@ -269,6 +272,46 @@ cleanCreepMemory = function() {
   
     return undefined;
   };
+
+  resetBoostProduction = function(roomName) {
+      let data,
+          myRooms = _.filter(Game.rooms, {'my': true});
+
+      for (let room of myRooms) {
+
+          if ((roomName === undefined || room.name === roomName)) {
+
+              data = room.memory.resources;
+
+              console.log(room.name);
+
+              if (!_.isUndefined(data)) {
+
+                  data.offers = [];
+                  data.orders = [];
+
+                  if (data.terminal[0])
+                      data.terminal[0].orders = [];
+
+                  if (data.storage[0])
+                      data.storage[0].orders = [];
+
+                  if (data.reactions)
+                      data.reactions.orders = [];
+
+                  if (data.lab) {
+                      data.lab = [];
+                      _.values(Game.structures).filter(i => i.structureType === 'lab').map(i => i.room.setStore(i.id, RESOURCE_ENERGY, 2000));
+                  }
+                  delete data.boostTiming;
+                  delete data.seedCheck;
+              } else
+                  console.log(`${room.name} has no memory.resources`);
+          }
+      }
+      if (roomName === undefined)
+          delete Memory.boostTiming;
+  };
   
   getMinimum = function(x, y) {
     if (x < y) {
@@ -303,8 +346,8 @@ cleanCreepMemory = function() {
   // example usage: txt(COLOR.info, 'your text here')
   txt = function(style, text) {
     if (isObj(style)) {
-      var css = "";
-      var format = key => (css += key + ":" + style[key] + ";");
+      let css = "";
+      let format = key => (css += key + ":" + style[key] + ";");
       _.forEach(Object.keys(style), format);
       return '<font style="' + css + '">' + text + "</font>";
     }

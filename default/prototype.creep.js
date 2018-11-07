@@ -181,7 +181,7 @@ Creep.prototype.checkRecycle = function() {
             this.moveHome(); return true;
         }
     
-        var spawn = Game.getObjectById(this.room.memory.spawn);
+        let spawn = Game.getObjectById(this.room.memory.spawn);
         if (spawn) {
             if (spawn.recycleCreep(this) === ERR_NOT_IN_RANGE) {
                 this.travelTo(spawn.pos, { ignoreCreeps: false });
@@ -208,7 +208,7 @@ Creep.prototype.detectHostiles = function() {
             opsRanged += threats[i].getActiveBodyparts(RANGED_ATTACK);
             opsHeal += threats[i].getActiveBodyparts(HEAL);
         }
-        console.log(txt(COLOR.warn, this.room.name + ' attack: ' + opsAttack + ' ranged: ' + opsRanged + ' heal: ' + opsHeal + ' Running to homeRoom'));
+        console.log(txt(COLOR.warn, this.room.name + ' attack:' + opsAttack + ' ranged:' + opsRanged + ' heal:' + opsHeal + ' Running to homeRoom'));
         return true;
     } else {
         return false;

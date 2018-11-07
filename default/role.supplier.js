@@ -18,7 +18,7 @@ Creep.prototype.doSupply = function()
         
     if(this.memory.hauling)
     {
-        if(this.room.memory.defConMode == 'active')
+        if(this.room.memory.defConMode === 'active')
         {
             if (this.findTower(500)) { return; }
             if (this.findSpawnOrExtension()) { return; }
@@ -54,8 +54,8 @@ Creep.prototype.findSpawnOrExtension = function()
     {
         filter: (structure) =>
         {
-            return (structure.structureType == STRUCTURE_SPAWN || 
-                    structure.structureType == STRUCTURE_EXTENSION) &&
+            return (structure.structureType === STRUCTURE_SPAWN ||
+                    structure.structureType === STRUCTURE_EXTENSION) &&
                     structure.energy < structure.energyCapacity;
         }
     });
@@ -66,7 +66,7 @@ Creep.prototype.findSpawnOrExtension = function()
         return true;
     }
     return false;
-}
+};
 
 Creep.prototype.findTower = function(threshold)
 {
@@ -74,7 +74,7 @@ Creep.prototype.findTower = function(threshold)
     {
         filter: (structure) =>
         {
-            return (structure.structureType == STRUCTURE_TOWER) && 
+            return (structure.structureType === STRUCTURE_TOWER) &&
                     structure.energy < threshold;
         }
     });
@@ -85,7 +85,7 @@ Creep.prototype.findTower = function(threshold)
         return true;
     }
     return false;
-}
+};
 
 Creep.prototype.findLink = function(threshold)
 {
@@ -99,4 +99,4 @@ Creep.prototype.findLink = function(threshold)
         return true;
     }
     return false;
-}
+};

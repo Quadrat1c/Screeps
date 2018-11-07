@@ -20,14 +20,17 @@ Room.prototype.checkRoom = function()
         let opsAttack = 0;
         let opsRanged = 0;
         let opsHeal = 0;
+        let owner = '';
         for (let i in enemyCreeps) {
             opsAttack += enemyCreeps[i].getActiveBodyparts(ATTACK);
             opsRanged += enemyCreeps[i].getActiveBodyparts(RANGED_ATTACK);
             opsHeal += enemyCreeps[i].getActiveBodyparts(HEAL);
+            owner += enemyCreeps[i].owner.username;
         }
         this.memory.neighborData.opsAttack = opsAttack;
         this.memory.neighborData.opsRanged = opsRanged;
         this.memory.neighborData.opsHeal = opsHeal;
+        this.memory.neighborData.creepOwner = owner.toString();
     }
 
 
@@ -73,7 +76,7 @@ Room.prototype.findExitRooms = function()
     {
         this.memory.exitRooms = [];
         let rooms = Game.map.describeExits(this.name);
-        for(var key in rooms)
+        for(let key in rooms)
         {
             this.memory.exitRooms.push(rooms[key]);
         }
