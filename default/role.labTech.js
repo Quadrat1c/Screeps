@@ -1,6 +1,8 @@
 'use strict';
 
 Creep.prototype.doLabTech = function() {
+    //this.termToStorageEnergy();
+    //return;
 
     if (this.ticksToLive < 50 && _.sum(this.carry) === 0) {
         // labTech will die soon recycle
@@ -9,8 +11,10 @@ Creep.prototype.doLabTech = function() {
             this.travelTo(spawn);
         }
     } else {
-        let resourceA = RESOURCE_ZYNTHIUM;
-        let resourceB = RESOURCE_KEANIUM;
+        // Memory.rooms['E8S5'].resources.resourceA = RESOURCE_UTRIUM_LEMERGITE;
+        // Memory.rooms['E8S5'].resources.resourceA = RESOURCE_ZYNTHIUM_KEANITE;
+        let resourceA = this.room.memory.resources.resourceA;
+        let resourceB = this.room.memory.resources.resourceB;
         let labA = Game.getObjectById(this.room.memory.resources.reactions.seed_a);
         let labB = Game.getObjectById(this.room.memory.resources.reactions.seed_b);
         let terminal = Game.getObjectById(this.room.memory.terminal);
@@ -32,7 +36,6 @@ Creep.prototype.doLabTech = function() {
         if (labA.mineralAmount < 5) {
             // Get resourceA
             if (_.sum(this.carry) === 0) {
-
                 if (terminal.store[resourceA] > 100) {
                     this.memory.mineralType = resourceA;
                     if (this.withdraw(terminal, resourceA) === ERR_NOT_IN_RANGE) {
@@ -73,6 +76,7 @@ Creep.prototype.doLabTech = function() {
         }
 
         this.labTechThings(labA, labB, terminal, resourceA, resourceB);
+
     }
 };
 
@@ -169,7 +173,7 @@ Creep.prototype.labTechThings = function(labA, labB, terminal, resourceA, resour
 Creep.prototype.fillNuker = function(terminal) {
     let nuker = Game.getObjectById(this.room.memory.nuker);
 
-    if (nuker.ghodium < 5000) {
+    if (nuker && nuker.ghodium < 5000) {
         if (_.sum(this.carry) === 0) {
             if (terminal.store[RESOURCE_GHODIUM] === 0) {
                 return false;
@@ -188,4 +192,24 @@ Creep.prototype.fillNuker = function(terminal) {
     } else {
         return false;
     }
+};
+
+Creep.prototype.termToStorageEnergy = function() {
+    let terminal = Game.getObjectById(this.room.memory.terminal);
+    let storage = Game.getObjectById(this.room.memory.storage);
+
+    if (terminal.store[RESOURCE_ENERGY] > 60000) {
+        if (_.sum(this.carry) === 0) {
+            if (this.withdraw(terminal, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                this.travelTo(terminal);
+            }
+            return true;
+        } else {
+            if (this.transfer(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                this.travelTo(storage);
+            }
+            return true;
+        }
+    }
+    return false;
 };
