@@ -164,7 +164,7 @@ StructureSpawn.prototype.doSpawn = function(room) {
                 maxUpgraders++;
             }
         } else {
-            maxUpgraders = 3 - this.room.memory.creeps.builders;
+            maxUpgraders = 4;
             if(getContainerEnergy(room) >= 2000 * room.memory.sources.length) {
                 maxUpgraders += 5;
             }
