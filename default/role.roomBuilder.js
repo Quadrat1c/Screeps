@@ -216,25 +216,59 @@ Room.prototype.initRoads = function()
 
 Room.prototype.showBuildPlan = function()
 {
+    const debugSymbols = {
+        container: '⊔',
+        exit: '🚪',
+        extension: '⚬',
+        lab: '🔬',
+        link: '🔗',
+        nuker: '☢',
+        observer: '👁',
+        powerSpawn: '⚡',
+        rampart: '#',
+        road: '·',
+        spawn: '⭕',
+        storage: '⬓',
+        terminal: '⛋',
+        tower: '⚔',
+    };
+
+    const visual = new RoomVisual(this.roomName);
     let spawn = Game.getObjectById(this.memory.spawn);
     
     // tower
-    new RoomVisual(this.room).circle(spawn.pos.x - 1, spawn.pos.y - 3, {fill: 'red', stroke: 'red', radius: 0.25});
+    visual.text(debugSymbols['tower'], spawn.pos.x - 1, spawn.pos.y - 3);
     // storage
-    new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y - 2, {fill: 'white', stroke: 'white', radius: 0.25});
+    visual.text(debugSymbols['storage'], spawn.pos.x, spawn.pos.y - 2);
     // link
-    new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y - 4, {fill: 'cyan', stroke: 'cyan', radius: 0.25});
+    visual.text(debugSymbols['link'], spawn.pos.x, spawn.pos.y - 4);
     // spawns
-    new RoomVisual(this.room).circle(spawn.pos.x + 1, spawn.pos.y - 1, {fill: 'green', stroke: 'green', radius: 0.40});
-    new RoomVisual(this.room).circle(spawn.pos.x - 1, spawn.pos.y - 1, {fill: 'green', stroke: 'green', radius: 0.40});
+    visual.text(debugSymbols['spawn'], spawn.pos.x + 1, spawn.pos.y - 1);
+    visual.text(debugSymbols['spawn'], spawn.pos.x - 1, spawn.pos.y - 1);
     // terminal
-    new RoomVisual(this.room).circle(spawn.pos.x + 1, spawn.pos.y - 3, {fill: 'pink', stroke: 'pink', radius: 0.35});
+    visual.text(debugSymbols['terminal'], spawn.pos.x + 1, spawn.pos.y - 3);
     // other towers
-    new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y + 2, {fill: 'red', stroke: 'red', radius: 0.15});
-    new RoomVisual(this.room).circle(spawn.pos.x - 1, spawn.pos.y + 1, {fill: 'red', stroke: 'red', radius: 0.15});
-    new RoomVisual(this.room).circle(spawn.pos.x + 1, spawn.pos.y + 1, {fill: 'red', stroke: 'red', radius: 0.15});
-    new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y + 3, {fill: 'red', stroke: 'red', radius: 0.15});
-
+    visual.text(debugSymbols['tower'], spawn.pos.x - 2, spawn.pos.y - 2);
+    visual.text(debugSymbols['tower'], spawn.pos.x - 2, spawn.pos.y - 4);
+    visual.text(debugSymbols['tower'], spawn.pos.x - 1, spawn.pos.y - 6);
+    visual.text(debugSymbols['tower'], spawn.pos.x - 2, spawn.pos.y - 5);
+    // labs
+    visual.text(debugSymbols['lab'], spawn.pos.x, spawn.pos.y + 2);
+    visual.text(debugSymbols['lab'], spawn.pos.x - 1, spawn.pos.y + 2);
+    visual.text(debugSymbols['lab'], spawn.pos.x - 1, spawn.pos.y + 3);
+    visual.text(debugSymbols['lab'], spawn.pos.x + 1, spawn.pos.y + 3);
+    visual.text(debugSymbols['lab'], spawn.pos.x + 1, spawn.pos.y + 4);
+    visual.text(debugSymbols['lab'], spawn.pos.x, spawn.pos.y + 4);
+    visual.text(debugSymbols['lab'], spawn.pos.x - 2, spawn.pos.y + 3);
+    visual.text(debugSymbols['lab'], spawn.pos.x - 2, spawn.pos.y + 4);
+    visual.text(debugSymbols['lab'], spawn.pos.x, spawn.pos.y + 5);
+    visual.text(debugSymbols['lab'], spawn.pos.x - 1, spawn.pos.y + 5);
+    // nuker
+    visual.text(debugSymbols['nuker'], spawn.pos.x - 1, spawn.pos.y - 5);
+    // power spawn
+    visual.text(debugSymbols['powerSpawn'], spawn.pos.x + 1, spawn.pos.y - 5);
+    // observer
+    visual.text(debugSymbols['observer'], spawn.pos.x, spawn.pos.y - 6);
     // initial spawn roads
     new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y - 1, {fill: 'grey', stroke: 'grey', radius: 0.15});
     new RoomVisual(this.room).circle(spawn.pos.x, spawn.pos.y - 3, {fill: 'grey', stroke: 'grey', radius: 0.15});
