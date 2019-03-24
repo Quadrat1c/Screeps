@@ -56,6 +56,12 @@ cleanCreepMemory = function() {
           case "ranger":
             Memory.rooms[Memory.creeps[name].target].creeps.rangers--;
             break;
+          case "dismantler":
+            Memory.rooms[Memory.creeps[name].target].creeps.dismantler--;
+            break;
+          case "drainer":
+            Memory.rooms[Memory.creeps[name].target].creeps.drainer--;
+            break;
           case "labTech":
               Memory.rooms[Memory.creeps[name].homeRoom].creeps.labTechs--;
             break;
@@ -113,8 +119,69 @@ cleanCreepMemory = function() {
             console.log("Error processing red flag: " + ex.toString());
           }
           break;
+
+        case COLOR_PURPLE:
+          try {
+            const debugSymbols = {
+                container: '⊔',
+                exit: '🚪',
+                extension: '⚬',
+                lab: '🔬',
+                link: '🔗',
+                nuker: '☢',
+                observer: '👁',
+                powerSpawn: '⚡',
+                rampart: '#',
+                road: '·',
+                spawn: '⭕',
+                storage: '⬓',
+                terminal: '⛋',
+                tower: '⚔',
+            };
+
+            const visual = new RoomVisual(this.roomName);
+            //let spawn = Game.getObjectById(this.memory.spawn);
+            
+            // tower
+            visual.text(debugSymbols['tower'], flag.pos.x - 1, flag.pos.y - 3);
+            // storage
+            visual.text(debugSymbols['storage'], flag.pos.x, flag.pos.y - 2);
+            // link
+            visual.text(debugSymbols['link'], flag.pos.x, flag.pos.y - 4);
+            // spawns
+            visual.text(debugSymbols['spawn'], flag.pos.x + 1, flag.pos.y - 1);
+            visual.text(debugSymbols['spawn'], flag.pos.x - 1, flag.pos.y - 1);
+            // terminal
+            visual.text(debugSymbols['terminal'], flag.pos.x + 1, flag.pos.y - 3);
+            // other towers
+            visual.text(debugSymbols['tower'], flag.pos.x - 2, flag.pos.y - 2);
+            visual.text(debugSymbols['tower'], flag.pos.x - 2, flag.pos.y - 4);
+            visual.text(debugSymbols['tower'], flag.pos.x - 1, flag.pos.y - 6);
+            visual.text(debugSymbols['tower'], flag.pos.x - 2, flag.pos.y - 5);
+            // labs
+            visual.text(debugSymbols['lab'], flag.pos.x, flag.pos.y + 2);
+            visual.text(debugSymbols['lab'], flag.pos.x - 1, flag.pos.y + 2);
+            visual.text(debugSymbols['lab'], flag.pos.x - 1, flag.pos.y + 3);
+            visual.text(debugSymbols['lab'], flag.pos.x + 1, flag.pos.y + 3);
+            visual.text(debugSymbols['lab'], flag.pos.x + 1, flag.pos.y + 4);
+            visual.text(debugSymbols['lab'], flag.pos.x, flag.pos.y + 4);
+            visual.text(debugSymbols['lab'], flag.pos.x - 2, flag.pos.y + 3);
+            visual.text(debugSymbols['lab'], flag.pos.x - 2, flag.pos.y + 4);
+            visual.text(debugSymbols['lab'], flag.pos.x, flag.pos.y + 5);
+            visual.text(debugSymbols['lab'], flag.pos.x - 1, flag.pos.y + 5);
+            // nuker
+            visual.text(debugSymbols['nuker'], flag.pos.x - 1, flag.pos.y - 5);
+            // power spawn
+            visual.text(debugSymbols['powerSpawn'], flag.pos.x + 1, flag.pos.y - 5);
+            // observer
+            visual.text(debugSymbols['observer'], flag.pos.x, flag.pos.y - 6);
+          } catch (ex) {
+            console.log("Error processing purple flag: " + ex.toString());
+          }
+          break;
   
         default:
+          console.log("Error Unknown flag in Room: " + flag.pos.roomName);
           //flag.remove();
           break;
       }
