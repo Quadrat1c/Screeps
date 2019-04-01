@@ -50,7 +50,7 @@ Creep.prototype.doMineralMine = function()
 
 Creep.prototype.findStorageOrTerminal = function()
 {
-    let target = this.pos.findClosestByRange(FIND_MY_STRUCTURES,
+    let target = this.pos.find(FIND_MY_STRUCTURES,
     {
         filter: (structure) =>
         {

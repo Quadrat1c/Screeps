@@ -1,6 +1,8 @@
 'use strict';
 
 Creep.prototype.doLabTech = function() {
+    //this.storageToTerminalEnergy();
+    //return;
     //this.termToStorageEnergy();
     //return;
 
@@ -76,11 +78,14 @@ Creep.prototype.doLabTech = function() {
         }
 
         this.labTechThings(labA, labB, terminal, resourceA, resourceB);
-
     }
 };
 
 Creep.prototype.labTechThings = function(labA, labB, terminal, resourceA, resourceB) {
+    if (this.fillNuker(terminal)) {
+        return;
+    }
+
     let target = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
         filter: (structure) => {
             return (structure.structureType === STRUCTURE_LAB)
@@ -125,10 +130,6 @@ Creep.prototype.labTechThings = function(labA, labB, terminal, resourceA, resour
             this.travelTo(terminal);
             this.transfer(terminal, this.memory.mineralType);
         }
-        return;
-    }
-
-    if (this.fillNuker(terminal)) {
         return;
     }
 
@@ -207,6 +208,26 @@ Creep.prototype.termToStorageEnergy = function() {
         } else {
             if (this.transfer(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                 this.travelTo(storage);
+            }
+            return true;
+        }
+    }
+    return false;
+};
+
+Creep.prototype.storageToTerminalEnergy = function() {
+    let terminal = Game.getObjectById(this.room.memory.terminal);
+    let storage = Game.getObjectById(this.room.memory.storage);
+
+    if (storage.store[RESOURCE_ENERGY] > 400000) {
+        if (_.sum(this.carry) === 0) {
+            if (this.withdraw(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                this.travelTo(storage);
+            }
+            return true;
+        } else {
+            if (this.transfer(terminal, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                this.travelTo(terminal);
             }
             return true;
         }

@@ -2,7 +2,7 @@ Creep.prototype.doLongDistanceBuild = function()
 {
     if(this.checkRecycle()) { return; }
     
-    if(this.room.name == this.memory.homeRoom)
+    if(this.room.name === this.memory.homeRoom)
     {
         if(this.carry[RESOURCE_ENERGY] >= this.carryCapacity)
         {
@@ -15,7 +15,7 @@ Creep.prototype.doLongDistanceBuild = function()
             return;
         }
     }
-    else if(this.room.name == this.memory.target)
+    else if(this.room.name === this.memory.target)
     {
         if(this.memory.danger)
         {
@@ -36,12 +36,12 @@ Creep.prototype.doLongDistanceBuild = function()
         else
             this.memory.danger = false;
 
-        if(!this.memory.working && this.carry[RESOURCE_ENERGY] == this.carryCapacity)
+        if(!this.memory.working && this.carry[RESOURCE_ENERGY] === this.carryCapacity)
         {
             this.memory.working = true;
             //this.say('Carrying');
         }
-        if(this.memory.working && this.carry[RESOURCE_ENERGY] == 0)
+        if(this.memory.working && this.carry[RESOURCE_ENERGY] === 0)
         {
             this.memory.working = false;
             //this.memory.target = this.findSource();
@@ -54,7 +54,7 @@ Creep.prototype.doLongDistanceBuild = function()
             let target = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
             if(target)
             {
-                if(this.build(target) == ERR_NOT_IN_RANGE)
+                if(this.build(target) === ERR_NOT_IN_RANGE)
                 {
                     this.travelTo(target);
                     return;
@@ -71,7 +71,7 @@ Creep.prototype.doLongDistanceBuild = function()
             {
                 let source = Game.getObjectById(this.findSource());
                 //console.log(source);
-                if(this.harvest(source) == ERR_NOT_IN_RANGE)
+                if(this.harvest(source) === ERR_NOT_IN_RANGE)
                 {
                     this.travelTo(source);
                 }

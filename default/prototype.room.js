@@ -12,6 +12,32 @@ Room.prototype.run = function() {
     if (global.config.options.reportControllerUpgrade) {
         this.reportControllerUpgrade();
     }
+
+    //this.viewRoom();
+    //this.launchNuke();
+};
+
+Room.prototype.launchNuke = function() {
+
+    if (this.name === 'E9S9') {
+        let missile = Game.getObjectById(this.memory.nuker);
+        missile.launchNuke(new RoomPosition(11,31, 'E12S6'));
+    }/*
+    if (this.name === 'E8S5') {
+        let missile = Game.getObjectById(this.memory.nuker);
+        missile.launchNuke(new RoomPosition(10,34, 'E13N1'));
+    }*/
+};
+
+Room.prototype.viewRoom = function() {
+    if (this.name === 'E9S9') {
+        let observer = Game.getObjectById(this.memory.observer);
+        console.log(observer);
+        let ret = observer.observeRoom('E13S8');
+        if (ret === OK) {
+            this.memory.creeps.dismantler = 0;
+        }
+    }
 };
 
 Room.prototype.runDefCon = function() {
@@ -108,6 +134,8 @@ Room.prototype.init = function() {
     if(!this.memory.creeps.suppliers) { this.memory.creeps.suppliers = 0; }
     if(!this.memory.creeps.bouncers) { this.memory.creeps.bouncers = 0; }
     if(!this.memory.creeps.rangers) { this.memory.creeps.rangers = 0; }
+    if(!this.memory.creeps.dismantler) { this.memory.creeps.dismantler = 0; }
+    if(!this.memory.creeps.drainer) { this.memory.creeps.drainer = 0; }
     if(!this.memory.creeps.longBuilders) { this.memory.creeps.longBuilders = 0; }
     if(!this.memory.creeps.mineralMiners) {this.memory.creeps.mineralMiners = 0; }
     if(!this.memory.creeps.labTechs) {this.memory.creeps.labTechs = 0; }
@@ -196,8 +224,9 @@ Room.prototype.doOperations = function () {
         let labs = this.find(FIND_MY_STRUCTURES, {
             filter: (structure) => { return (structure.structureType === STRUCTURE_LAB) }
         });
+        this.autoRegisterLabs(labs);
 
-        if (labs.length >= 6) {
+        if (labs.length >= 10) {
             if (this.flowerRegisterCheck(labs)) {
                 // TODO: get labs running
                 // labs are registered and ready to run!
@@ -334,10 +363,10 @@ Room.prototype.getNumRepairTargets = function() {
 };
 
 Room.prototype.tryColonize = function(spawn) {
-    if (this.memory.energyConMode < 3) {
+    if (this.memory.energyConMode < 2) { // < 3
         return false;
     }
-    
+
     let allFlags = Object.keys(Game.flags);
     for (let it of allFlags) {
         let flag = Game.flags[it];

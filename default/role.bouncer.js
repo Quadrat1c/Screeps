@@ -24,20 +24,32 @@ Creep.prototype.doBounce = function() {
             {
                 return (structs.structureType === STRUCTURE_TOWER ||
                         structs.structureType === STRUCTURE_SPAWN ||
-                        structs.structureType === STRUCTURE_EXTENSION);
+                        structs.structureType === STRUCTURE_EXTENSION ||
+                        structs.structureType === STRUCTURE_RAMPART);
             }
         });
+        /*
+        if (hostileStructures) {
+            if (this.attack(hostileStructures) === ERR_NOT_IN_RANGE) {
+                this.travelTo(hostileStructures);
+            }
+        } else if (hostileCreeps) {
+            if(this.attack(hostileCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(hostileCreeps); }
+        }*/
+
         if (hostileCreeps) {
             if (this.attack(hostileCreeps) === ERR_NOT_IN_RANGE) {
                 this.travelTo(hostileCreeps);
             }
         } else if (hostileStructures) {
-            if(this.attack(hostileStructures) === ERR_NOT_IN_RANGE) { this.travelTo(hostileStructures); }
+            if(this.attack(hostileStructures) === ERR_NOT_IN_RANGE) {
+                this.travelTo(hostileStructures);
+            }
         }
         else
         {
-            //this.heal(this);
             if(this.hits < this.hitsMax) {
+                this.heal(this);
                 this.moveHome();
             }
             else { this.travelTo(new RoomPosition(25, 25, this.memory.target), {ignoreRoads: true}); }

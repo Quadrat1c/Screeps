@@ -54,6 +54,14 @@ Current TODO Checklist:
     + Placement for end game buildings
     + labTech role working
 
+0.0.8
+	+ Improved RCL 1-3 building. (Tower before safe mode ends)
+		+ Spawned more upgraders
+	+ Improved showBuildPlan
+		+ shows labs and other structures
+		+ added icons
+	+ Extension roads will not build on top of walls
+
 
 Completed TODO's:
 [x] Visual Build Planner v0.0.4 - primitive version

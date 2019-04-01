@@ -54,6 +54,12 @@ Creep.prototype.run = function() {
             case 'labTech':
                 this.doLabTech();
                 break;
+            case 'dismantler':
+                this.doDismantler();
+                break;
+            case 'drainer':
+                this.doDrainer();
+                break;
             default:
                 console.log('ERROR: Creep ' + this.name + ' does not have a role.');
                 break;
@@ -213,4 +219,68 @@ Creep.prototype.detectHostiles = function() {
     } else {
         return false;
     }
+};
+
+Creep.prototype.findSpawnOrExtension = function()
+{
+    let target = this.pos.findClosestByRange(FIND_MY_STRUCTURES,
+        {
+            filter: (structure) =>
+            {
+                return (structure.structureType === STRUCTURE_SPAWN ||
+                    structure.structureType === STRUCTURE_EXTENSION) &&
+                    structure.energy < structure.energyCapacity;
+            }
+        });
+    if(target)
+    {
+        this.travelTo(target);
+        this.transfer(target, RESOURCE_ENERGY);
+        return true;
+    }
+    return false;
+};
+
+Creep.prototype.findTower = function(threshold)
+{
+    let tower = this.pos.findClosestByRange(FIND_MY_STRUCTURES,
+        {
+            filter: (structure) =>
+            {
+                return (structure.structureType === STRUCTURE_TOWER) &&
+                    structure.energy < threshold;
+            }
+        });
+    if(tower)
+    {
+        this.travelTo(tower);
+        this.transfer(tower, RESOURCE_ENERGY);
+        return true;
+    }
+    return false;
+};
+
+Creep.prototype.findLink = function(threshold)
+{
+    if (!this.room.memory.spawnLink) { return false; }
+    let spawnLink = Game.getObjectById(this.room.memory.spawnLink);
+    if (!spawnLink) { return false; }
+    if (spawnLink.energy < threshold)
+    {
+        this.travelTo(spawnLink);
+        this.transfer(spawnLink, RESOURCE_ENERGY);
+        return true;
+    }
+    return false;
+};
+
+Creep.prototype.findStorage = function()
+{
+    if(this.room.storage)
+    {
+        this.travelTo(this.room.storage, { ignoreCreeps: false });
+        this.transfer(this.room.storage, RESOURCE_ENERGY);
+        return true;
+    }
+    return false;
 };

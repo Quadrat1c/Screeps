@@ -393,18 +393,45 @@ Room.prototype.createExtensions = function()
         { 
             x += 2;
             if (this.createConstructionSite(spawn.pos.x + x, spawn.pos.y + y, STRUCTURE_EXTENSION) === OK) {
-                this.createConstructionSite(spawn.pos.x + x - 1, spawn.pos.y + y, STRUCTURE_ROAD);
-                this.createConstructionSite(spawn.pos.x + x, spawn.pos.y + y - 1, STRUCTURE_ROAD);
-            } 
+                const roomName = this.name;
+                const terrain = Game.rooms[roomName].getTerrain();
+                switch(terrain.get(spawn.pos.x + x - 1, spawn.pos.y + y)) {
+                    case TERRAIN_MASK_WALL:
+                        break;
+                    case 0:
+                        this.createConstructionSite(spawn.pos.x + x - 1, spawn.pos.y + y, STRUCTURE_ROAD);
+                        break;
+                }
+                switch(terrain.get(spawn.pos.x + x, spawn.pos.y + y - 1)) {
+                    case TERRAIN_MASK_WALL:
+                        break;
+                    case 0:
+                        this.createConstructionSite(spawn.pos.x + x, spawn.pos.y + y - 1, STRUCTURE_ROAD);
+                        break;
+                }
+            }
         }
         if (x <= 0)
         { 
             x += -2;
             if (this.createConstructionSite(spawn.pos.x + x, spawn.pos.y + y, STRUCTURE_EXTENSION) === OK) {
-                this.createConstructionSite(spawn.pos.x + x + 1, spawn.pos.y + y, STRUCTURE_ROAD);
-                this.createConstructionSite(spawn.pos.x + x, spawn.pos.y + y + 1, STRUCTURE_ROAD);
-            } 
-
+                const roomName = this.name;
+                const terrain = Game.rooms[roomName].getTerrain();
+                switch(terrain.get(spawn.pos.x + x + 1, spawn.pos.y + y)) {
+                    case TERRAIN_MASK_WALL:
+                        break;
+                    case 0:
+                        this.createConstructionSite(spawn.pos.x + x + 1, spawn.pos.y + y, STRUCTURE_ROAD);
+                        break;
+                }
+                switch(terrain.get(spawn.pos.x + x, spawn.pos.y + y + 1)) {
+                    case TERRAIN_MASK_WALL:
+                        break;
+                    case 0:
+                        this.createConstructionSite(spawn.pos.x + x, spawn.pos.y + y + 1, STRUCTURE_ROAD);
+                        break;
+                }
+            }
         }
     }
 };

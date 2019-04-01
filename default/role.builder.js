@@ -2,11 +2,11 @@
 
 Creep.prototype.doBuild = function()
 {
-    if(this.room.name != this.memory.homeRoom) { this.moveHome(); return; }
+    if(this.room.name !== this.memory.homeRoom) { this.moveHome(); return; }
     
     if(!this.memory.building) { this.memory.building = false; }
     
-    if(this.memory.building && this.carry[RESOURCE_ENERGY] == 0)
+    if(this.memory.building && this.carry[RESOURCE_ENERGY] === 0)
     {
         this.memory.building = false;
     }
@@ -28,7 +28,7 @@ Creep.prototype.doBuild = function()
             let spawn = Game.getObjectById(this.room.memory.spawn);
             if (spawn)
             {
-                if (spawn.recycleCreep(this) == ERR_NOT_IN_RANGE)
+                if (spawn.recycleCreep(this) === ERR_NOT_IN_RANGE)
                 {
                     this.travelTo(spawn.pos, { ignoreCreeps: false });
                 }
@@ -46,83 +46,83 @@ Creep.prototype.findStorageSite = function()
 {
     let target = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES,
     {
-        filter: (site) => (site.structureType == STRUCTURE_STORAGE)
+        filter: (site) => (site.structureType === STRUCTURE_STORAGE)
     });
     
     if(target)
     {
-        if(this.build(target) == ERR_NOT_IN_RANGE)
+        if(this.build(target) === ERR_NOT_IN_RANGE)
         {
             this.travelTo(target);
         }
         return true;
     }
     return false;
-}
+};
 
 Creep.prototype.findExtensionSite = function()
 {
     let target = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES,
     {
-        filter: (site) => (site.structureType == STRUCTURE_EXTENSION)
+        filter: (site) => (site.structureType === STRUCTURE_EXTENSION)
     });
     
     if(target)
     {
-        if(this.build(target) == ERR_NOT_IN_RANGE)
+        if(this.build(target) === ERR_NOT_IN_RANGE)
         {
             this.travelTo(target);
         }
         return true;
     }
     return false;
-}
+};
 
 Creep.prototype.findRampartSite = function()
 {
     let target = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES,
     {
-        filter: (site) => (site.structureType == STRUCTURE_RAMPART)
+        filter: (site) => (site.structureType === STRUCTURE_RAMPART)
     });
     if(target)
     {
-        if(this.build(target) == ERR_NOT_IN_RANGE)
+        if(this.build(target) === ERR_NOT_IN_RANGE)
         {
             this.travelTo(target);
         }
         return true;
     }
     return false;
-}
+};
 
 Creep.prototype.findTowerSite = function()
 {
     let target = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES,
     {
-        filter: (site) => (site.structureType == STRUCTURE_TOWER)
+        filter: (site) => (site.structureType === STRUCTURE_TOWER)
     });
 
     if (target)
     {
-        if (this.build(target) == ERR_NOT_IN_RANGE)
+        if (this.build(target) === ERR_NOT_IN_RANGE)
         {
             this.travelTo(target);
         }
         return true;
     }
     return false;
-}
+};
 
 Creep.prototype.findAnySite = function()
 {
     let target = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
     if(target)
     {
-        if(this.build(target) == ERR_NOT_IN_RANGE)
+        if(this.build(target) === ERR_NOT_IN_RANGE)
         {
             this.travelTo(target);
         }
         return true;
     }
     return false;
-}
+};

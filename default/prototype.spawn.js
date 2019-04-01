@@ -182,7 +182,7 @@ StructureSpawn.prototype.doSpawn = function(room) {
     }
     
     // Make scout
-    if (room.controller.level >= 3 && global.config.spawnScouts) {
+    if (room.controller.level >= 2 && global.config.options.spawnScouts) {
         if (room.memory.scoutTick >= global.config.options.scoutTimer) {
             let name = 'scout-' + generateRandomId();
             let ret = this.spawnCreep( [MOVE], name, { memory: {role: 'scout'} });
@@ -197,25 +197,33 @@ StructureSpawn.prototype.doSpawn = function(room) {
 
     // Check for need of mineralMiner
     if (room.controller.level >= 6) {
-        let mineral = Game.getObjectById(room.memory.minerals);
-        // Check if we have a mineralMiner
-        let maxMineralMiners = 1;
-        if (mineral.mineralAmount > 0 && room.memory.creeps.mineralMiners < maxMineralMiners) {
-            let ret = this.createGeneric(getMinimum(room.energyCapacityAvailable * 0.75, 2000), 'mineralMiner');
-            if (ret === OK) {
-                room.memory.creeps.mineralMiners++;
-            } else if (ret !== ERR_NOT_ENOUGH_ENERGY) {
-                console.log(txt(COLOR.error, 'Error spawning mineralMiner: ' + ret));
+        let extractor = room.find(FIND_MY_STRUCTURES, {
+            filter: (structure) => (structure.structureType === STRUCTURE_EXTRACTOR)
+        });
+
+        if (extractor.length) {
+            let mineral = Game.getObjectById(room.memory.minerals);
+            // Check if we have a mineralMiner
+            let maxMineralMiners = 1;
+            if (mineral.mineralAmount > 0 && room.memory.creeps.mineralMiners < maxMineralMiners) {
+                let ret = this.createGeneric(getMinimum(room.energyCapacityAvailable * 0.75, 2000), 'mineralMiner');
+                if (ret === OK) {
+                    room.memory.creeps.mineralMiners++;
+                } else if (ret !== ERR_NOT_ENOUGH_ENERGY) {
+                    console.log(txt(COLOR.error, 'Error spawning mineralMiner: ' + ret));
+                }
+                return;
             }
-            return;
         }
     }
 
     // spawn manually
-    let manualSpawn = false;
+    let manualSpawn = true;
+
+    /*
     if (manualSpawn) {
-        let name = 'E8S9';
-        if (Memory.rooms[name].creeps.rangers < 1) {
+        let name = 'E53N42';
+        if (Memory.rooms[name].creeps.rangers < 2) {
             //console.log('Manual Attack [ Room:', name, '] [ Rangers:', Memory.rooms[name].creeps.rangers, ']')
             let ret = this.createRanger(room.energyCapacityAvailable * 0.4, name);
             if (ret === OK) {
@@ -226,7 +234,22 @@ StructureSpawn.prototype.doSpawn = function(room) {
             }
             return;
         }
-    }
+    }*/
+    /*
+    if (manualSpawn) {
+        let name = 'E52N43';
+        if (Memory.rooms[name].creeps.rangers < 2) {
+            //console.log('Manual Attack [ Room:', name, '] [ Rangers:', Memory.rooms[name].creeps.rangers, ']')
+            let ret = this.createRanger(room.energyCapacityAvailable * 0.4, name);
+            if (ret === OK) {
+                Memory.rooms[name].creeps.rangers++;
+                if(global.config.options.reportHostileNeighbors) { console.log(txt(COLOR.info, 'Spawned ranger for room ' + name)); }
+            } else if (ret !== ERR_NOT_ENOUGH_ENERGY) {
+                console.log(txt(COLOR.error, 'Error spawning ranger: ' + ret));
+            }
+            return;
+        }
+    }*/
     
     //Check neighbor rooms
     if (room.memory.storage && Game.getObjectById(room.memory.storage)) {
@@ -318,7 +341,7 @@ StructureSpawn.prototype.doSpawn = function(room) {
             return;
         }
     }
-    
+
     if (room.tryColonize(this)) {
         return;
     }
@@ -606,6 +629,10 @@ StructureSpawn.prototype.createRanger = function(energy, targetRoom) {
     return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'ranger', target: targetRoom} });
 };
 
+StructureSpawn.prototype.createSquadRanger = function(energy, stagingRoom, targetRoom) {
+
+};
+
 StructureSpawn.prototype.createDynamicRanger = function(energy, attackParts, rangedParts, healParts, targetRoom) {
     let totalCost = 0;
     let mods = [];
@@ -650,6 +677,10 @@ StructureSpawn.prototype.createDynamicRanger = function(energy, attackParts, ran
         let name = 'ranger-' + generateRandomId() + generateRandomId();
         return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'ranger', target: targetRoom} });
     } else {
+        mods.splice('HEAL', 1);
+        mods.splice('MOVE', 1);
+        let name = 'ranger-' + generateRandomId() + generateRandomId();
+        return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'ranger', target: targetRoom} });
         console.log(txt(COLOR.warn, '[CANNOT SPAWN Dynamic Ranger] TotalCost: ' + totalCost + ' EnergyCapacity: ' + energy + ' Room: ' + targetRoom));
     }
 };
