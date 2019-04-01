@@ -61,6 +61,7 @@ Current TODO Checklist:
 		+ shows labs and other structures
 		+ added icons
 	+ Extension roads will not build on top of walls
+	+ Only spawn mineralMiner if Extractor exists
 
 
 Completed TODO's:
