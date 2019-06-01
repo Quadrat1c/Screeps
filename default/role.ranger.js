@@ -16,6 +16,9 @@ Creep.prototype.doRanger = function()
     });
 
     let constructionSites = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+    let myCreep = this.pos.findClosestByRange(FIND_MY_CREEPS, {
+        filter: c => c.getActiveBodyparts(ATTACK)
+    });
 
     if(hostileCreeps)
     {
@@ -25,13 +28,23 @@ Creep.prototype.doRanger = function()
         if (threatCreeps){
             if(this.rangedAttack(threatCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(threatCreeps); } //else { this.say("⚡ Bolt!", true); }
             this.kite(threatCreeps);
-            this.heal(this);
+            if(this.hits === this.hitsMax) {
+                if (myCreep) {
+                    if (myCreep.hits < myCreep.hitsMax) {
+                        if (this.heal(myCreep) === ERR_NOT_IN_RANGE) {
+                            this.travelTo(myCreep);
+                        }
+                    } else {
+                        this.travelTo(myCreep);
+                    }
+                }
+            } else {
+                this.heal(this);
+            }
             return;
         } else {
             if (this.hits === this.hitsMax) {
-                let myCreep = this.pos.findClosestByRange(FIND_MY_CREEPS, {
-                    filter: c => c.getActiveBodyparts(ATTACK)
-                });
+                
                 if (myCreep) {
                     if (myCreep.hits < myCreep.hitsMax) {
                         if (this.heal(myCreep) === ERR_NOT_IN_RANGE) {
@@ -60,9 +73,6 @@ Creep.prototype.doRanger = function()
         if (this.hits < this.hitsMax) {
             this.heal(this);
         } else {
-            let myCreep = this.pos.findClosestByRange(FIND_MY_CREEPS, {
-                filter: c => c.getActiveBodyparts(ATTACK)
-            });
             if (myCreep) {
                 if (myCreep.hits < myCreep.hitsMax) {
                     if (this.heal(myCreep) === ERR_NOT_IN_RANGE) {
