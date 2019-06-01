@@ -20,13 +20,23 @@ Creep.prototype.doRanger = function()
 
         if(hostileCreeps)
         {
-            if(this.rangedAttack(hostileCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(hostileCreeps); }
-            this.kite(hostileCreeps);
-            this.heal(this);
-            return;
+            let threatCreeps = this.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+                filter: c => c.getActiveBodyparts(ATTACK) || c.getActiveBodyparts(RANGED_ATTACK) || c.getActiveBodyparts(HEAL)
+            });
+            if (threatCreeps){
+                if(this.rangedAttack(threatCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(threatCreeps); } //else { this.say("⚡ Bolt!", true); }
+                this.kite(threatCreeps);
+                this.heal(this);
+                return;
+            } else {
+                if(this.rangedAttack(hostileCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(hostileCreeps); } else { this.say("⚡ Bolt!", true); }
+                this.kite(hostileCreeps);
+                this.heal(this);
+                return;
+            }
         }
         else if (hostileStructures) {
-            if(this.rangedAttack(hostileStructures) === ERR_NOT_IN_RANGE) { this.travelTo(hostileStructures); }
+            if(this.rangedAttack(hostileStructures) === ERR_NOT_IN_RANGE) { this.travelTo(hostileStructures); } else { this.say("⚡ Bolt!", true); }
             this.heal(this);
             return;
         } else if (constructionSites) {
@@ -73,6 +83,7 @@ Creep.prototype.doRanger = function()
     }
 };
 
+/*
 Creep.prototype.kite = function (fleeRange = 3) {
     let avoid = this.room.find(FIND_HOSTILE_CREEPS, {filter: (c) => c.getActiveBodyparts(ATTACK) > 0 || c.getActiveBodyparts(RANGED_ATTACK) > 0});
 
@@ -99,9 +110,9 @@ Creep.prototype.kite = function (fleeRange = 3) {
     } else {
         return OK;
     }
-};
+};*/
 
-/*
+
 Creep.prototype.kite = function(target) {
     let range = this.pos.getRangeTo(target);
     if(range === 3 && target.getActiveBodyparts(ATTACK) > 0) {
@@ -117,4 +128,4 @@ Creep.prototype.kite = function(target) {
         this.travelTo(new RoomPosition(x, y, this.memory.target), {ignoreRoads: true});
         return true;
     }
-};*/
+};
