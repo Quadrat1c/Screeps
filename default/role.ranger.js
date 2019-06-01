@@ -35,7 +35,7 @@ Creep.prototype.doRanger = function()
                             this.travelTo(myCreep);
                         }
                     } else {
-                        this.travelTo(myCreep);
+                        this.heal(this);
                     }
                 }
             } else {
@@ -51,7 +51,9 @@ Creep.prototype.doRanger = function()
                             this.travelTo(myCreep);
                         }
                     } else {
-                        this.travelTo(myCreep);
+                        if(this.rangedAttack(hostileCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(hostileCreeps); } else { this.say("⚡ Bolt!", true); }
+                        this.kite(hostileCreeps);
+                        this.heal(this);
                     }
                 }
             } else {
