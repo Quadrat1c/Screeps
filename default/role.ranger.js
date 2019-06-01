@@ -24,12 +24,16 @@ Creep.prototype.doRanger = function()
         });
         if (threatCreeps){
             if(this.rangedAttack(threatCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(threatCreeps); } //else { this.say("⚡ Bolt!", true); }
-            this.kite(threatCreeps);
+            //this.kite(threatCreeps);
+            let pos = threatCreeps.pos;
+            if (this.pos.isNearTo(pos)) this.flee(pos, 2);
             this.heal(this);
             return;
         } else {
             if(this.rangedAttack(hostileCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(hostileCreeps); } else { this.say("⚡ Bolt!", true); }
-            this.kite(hostileCreeps);
+            //this.kite(hostileCreeps);
+            let pos = hostileCreeps.pos;
+            if (this.pos.isNearTo(pos)) this.flee(pos, 2);
             this.heal(this);
             return;
         }
@@ -91,6 +95,31 @@ Creep.prototype.kite = function (fleeRange = 3) {
         return OK;
     }
 };*/
+
+Creep.prototype.flee = function(target, distance) {
+    let path = PathFinder.search(this.pos, {
+        pos: target.pos,
+        range: distance
+    }, {
+        flee: true,
+        maxRooms: 1
+    });
+    this.moveByPath(path.path);
+    return true;
+}
+
+function flee(creep, target, distance) {
+    Game.debug.sayAction(creep, 'flee');
+    var path = PathFinder.search(creep.pos, {
+        pos: target.pos, 
+        range: distance 
+    }, {  
+        flee: true, 
+        maxRooms: 1
+    });
+    creep.moveByPath(path.path);
+    return true; //Success
+}
 
 
 Creep.prototype.kite = function(target) {
