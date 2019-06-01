@@ -24,16 +24,16 @@ Creep.prototype.doRanger = function()
         });
         if (threatCreeps){
             if(this.rangedAttack(threatCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(threatCreeps); } //else { this.say("⚡ Bolt!", true); }
-            //this.kite(threatCreeps);
-            let pos = threatCreeps.pos;
-            if (this.pos.isNearTo(pos)) this.flee(pos, 2);
+            this.kite(threatCreeps);
+            //let pos = threatCreeps.pos;
+            //if (this.pos.isNearTo(pos)) this.flee(pos, 2);
             this.heal(this);
             return;
         } else {
             if(this.rangedAttack(hostileCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(hostileCreeps); } else { this.say("⚡ Bolt!", true); }
-            //this.kite(hostileCreeps);
-            let pos = hostileCreeps.pos;
-            if (this.pos.isNearTo(pos)) this.flee(pos, 2);
+            this.kite(hostileCreeps);
+            //let pos = hostileCreeps.pos;
+            //if (this.pos.isNearTo(pos)) this.flee(pos, 2);
             this.heal(this);
             return;
         }
