@@ -38,7 +38,7 @@ Creep.prototype.doRanger = function()
         if(this.rangedAttack(hostileStructures) === ERR_NOT_IN_RANGE) { this.travelTo(hostileStructures); } else { this.say("⚡ Bolt!", true); }
         this.heal(this);
         return;
-    } else if (constructionSites) {
+    } else if (constructionSites && this.room.name === this.memory.target) {
         this.travelTo(constructionSites);
         return;
     } else {
