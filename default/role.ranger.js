@@ -29,7 +29,7 @@ Creep.prototype.doRanger = function()
             if(this.rangedAttack(threatCreeps) === ERR_NOT_IN_RANGE) { this.travelTo(threatCreeps); } //else { this.say("⚡ Bolt!", true); }
             this.kite(threatCreeps);
             if(this.hits === this.hitsMax) {
-                if (myCreep) {
+                if (myCreep.length) {
                     if (myCreep.hits < myCreep.hitsMax) {
                         if (this.heal(myCreep) === ERR_NOT_IN_RANGE) {
                             this.travelTo(myCreep);
@@ -45,7 +45,7 @@ Creep.prototype.doRanger = function()
         } else {
             if (this.hits === this.hitsMax) {
                 
-                if (myCreep) {
+                if (myCreep.length) {
                     if (myCreep.hits < myCreep.hitsMax) {
                         if (this.heal(myCreep) === ERR_NOT_IN_RANGE) {
                             this.travelTo(myCreep);
