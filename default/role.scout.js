@@ -50,10 +50,3 @@ Creep.prototype.addExitsToSearch = function() {
         }
     }
 };
-    for (let key in rooms) {
-        if(this.memory.seen.indexOf(rooms[key]) === -1
-            && this.memory.search.indexOf(rooms[key]) === -1) {
-            this.memory.search.push(rooms[key]);
-        }
-    }
-};
