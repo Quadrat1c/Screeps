@@ -5,7 +5,6 @@ Room.prototype.run = function() {
     this.doUpkeep();
     this.runEnergyCon();
     this.runDefCon();
-    this.tryConstruct();
     this.cacheRoom();
     this.doOperations();
     
@@ -15,6 +14,11 @@ Room.prototype.run = function() {
 
     //this.viewRoom();
     //this.launchNuke();
+    
+    if (this.name === 'E1N1' || this.name === 'E2N2') {
+        return;
+    }
+    this.tryConstruct();
 };
 
 Room.prototype.launchNuke = function() {
