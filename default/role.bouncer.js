@@ -2,7 +2,7 @@
 
 Creep.prototype.doBounce = function() {
     if ((this.memory.target === this.memory.homeRoom && Memory.rooms[this.memory.target].defConMode === 'inactive')
-        || (Memory.rooms[this.memory.target].neighborData && !Memory.rooms[this.memory.target].neighborData.hostile)) {
+        /*|| (Memory.rooms[this.memory.target].neighborData && !Memory.rooms[this.memory.target].neighborData.hostile)*/) {
         if (this.room.name === this.memory.homeRoom) {
             let spawn = Game.getObjectById(this.room.memory.spawn);
             if (spawn) {
