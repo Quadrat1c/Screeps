@@ -1,6 +1,6 @@
 Creep.prototype.doLongDistanceBuild = function()
 {
-    if(this.checkRecycle()) { return; }
+    //if(this.checkRecycle()) { return; }
     
     if(this.room.name === this.memory.homeRoom)
     {
@@ -69,7 +69,8 @@ Creep.prototype.doLongDistanceBuild = function()
         {
             if(!this.memory.working)
             {
-                let source = Game.getObjectById(this.findSource());
+                //let source = Game.getObjectById(this.findSource());
+                let source = this.pos.findClosestByRange(FIND_SOURCES);
                 //console.log(source);
                 if(this.harvest(source) === ERR_NOT_IN_RANGE)
                 {
