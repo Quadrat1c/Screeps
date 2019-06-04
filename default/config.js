@@ -4,22 +4,45 @@ global.config =
 {
     options:
     {
+        // Reporting
     	reportCPU: false,
         reportControllerUpgrade: true,
         reportLongDistanceHauling: true,
         reportHostileNeighbors: true,
+        reportTravelerHeavyCPU: false,
+        // Scout Options
         spawnScouts: true,
         scoutTimer: 300,
+
         minWallHits: 100000000,
+        // Enable Options
         enableTerminal: true,
+        enablePowerSpawns: true,
+        enablePurchasePower: true,
         enableLabs: true,
         MAKE_REACTIONS_WITH_3LABS: false,
     },
 
     visuals:
     {
-    	showBuildPlan: false
-    }
+        showRoomInfo: false,
+    	showBuildPlan: false,
+    },
+
+    orders:
+    {
+        // Order Buy Prices
+        RESOURCE_POWER: 0.29,
+        // Order Sell Prices
+        RESOURCE_HYDROGEN: 0.1,
+        RESOURCE_OXYGEN: 0.09,
+        RESOURCE_UTRIUM: 0.05,
+        RESOURCE_LEMERGIUM: 0.08,
+        RESOURCE_KEANIUM: 0.08,
+        RESOURCE_ZYNTHIUM: 0.07,
+        RESOURCE_CATALYST: 0.1,
+        DEFAULT: 0.15,
+    },
 };
 
 global.resource =
