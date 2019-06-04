@@ -542,6 +542,22 @@ StructureSpawn.prototype.createLongDistanceHauler = function(energy, targetSourc
 };
 
 StructureSpawn.prototype.createLongDistanceBuilder = function(energy, targetRoom) {
+    let numberOfParts = getMinimum(Math.floor(energy / 200), 16);
+    let mods = [];
+    
+    for (let i = 0; i < numberOfParts; i++) {
+        mods.push(WORK);
+    }
+    for (let i = 0; i < numberOfParts; i++) {
+        mods.push(CARRY);
+    }
+    for (let i = 0; i < numberOfParts; i++) {
+        mods.push(MOVE);
+    }
+    
+    let name = 'longBuilder-' + generateRandomId() + generateRandomId();
+    return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'longDistanceBuilder', target: targetRoom} });
+    /*
     let numberOfParts = getMinimum(Math.floor(energy / 450), 8);
     let mods = [];
     
@@ -558,6 +574,7 @@ StructureSpawn.prototype.createLongDistanceBuilder = function(energy, targetRoom
     
     let name = 'longBuilder-' + generateRandomId() + generateRandomId();
     return this.spawnCreep(this.sortParts(mods), name, { memory: {role: 'longDistanceBuilder', target: targetRoom} });
+    */
 };
 
 StructureSpawn.prototype.createClaimer = function(energy, targetRoom, doColonize) {
