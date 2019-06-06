@@ -20,7 +20,7 @@ module.exports.loop = function () {
     }
 
     // Show CPU Bucket if below 9600
-    let cpuBucket = Game.cpuBucket;
+    let cpuBucket = Game.cpu.bucket;
     if (cpuBucket <= 9600) { 
         console.log('*ALERT* CPU Bucket: ' + cpuBucket); 
     }
