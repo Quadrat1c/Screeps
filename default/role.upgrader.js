@@ -1,9 +1,9 @@
 'use strict';
 
 Creep.prototype.doUpgrade = function() {
-    if (this.room.name !== this.memory.homeRoom) {
-        this.travelTo(new RoomPosition(25, 25, this.memory.homeRoom), {ignoreRoads: true});
-    }
+    // make sure upgrader stays in home room
+    if(this.room.name !== this.memory.homeRoom) { this.moveHome(); return; }
+
     if (this.room.controller.level >= 5 && Game.getObjectById(this.room.memory.controllerLink) && Game.getObjectById(this.room.memory.spawnLink))
     {
         let link = Game.getObjectById(this.room.memory.controllerLink);
